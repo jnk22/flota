@@ -43,10 +43,10 @@ Using **poetry**:
 ```bash
 git clone https://github.com/jnk22/flota
 cd flota
-poetry install --extras presentation
+poetry install --extras backend
 ```
 
-_The extra package **presentation** installs the HTTP API backend.
+_The extra package **backend** installs the HTTP API backend.
 This can be omitted if not required._
 
 ## Usage
