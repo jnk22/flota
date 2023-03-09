@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "flota-test-data"
+version = "0.0.1"
+description = ""
+authors = ["Valentin Hofmann"]
+maintainers = [
+  "Jannik Schaefer <jannik-schaefer@inbox-online.de>",
+  "Cedric Gaberle <cedric.gaberle@web.de>",
+]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.10.0"
+transformers = "^4.26.0"
+torch = "^1.13.0"
+pandas = "^1.5.0"
+numpy = "^1.24.0"
+scikit-learn = "^1.2.0"
