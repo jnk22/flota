@@ -15,7 +15,7 @@ A subset of the generated files are used for regression tests in the
 ## Generate test files
 
 ```bash
-./run_generate_test_data_2_limited.sh
-./run_generate_test_data_2_full.sh
-./run_generate_test_data_3_full.sh
+./generate_test_data_2_limited.sh
+./generate_test_data_2_full.sh
+./generate_test_data_3_full.sh
 ```
