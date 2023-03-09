@@ -39,12 +39,6 @@ jobs:
         with:
           shfmt-version: "3.6.0"
 
-      - name: Setup pre-commit
-        uses: pre-commit/action@v3.0.0
-
-      - name: Run pre-commit
-        uses: pre-commit-ci/lite-action@v1.0.1
-
       - name: Install dependencies
         run: poetry install --with=test
 
