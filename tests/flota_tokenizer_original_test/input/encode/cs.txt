@@ -1,0 +1,100 @@
+exploring interactions with voice-controlled tv
+feedback motion planning for liquid transfer using supervised learning
+submodularization for quadratic pseudoboolean optimization
+automata techniques for epistemic protocol synthesis
+neurec: on nonlinear transformation for personalized ranking
+multipass streaming algorithms for monotone submodular function maximization
+understanding interpretability by generalized distillation in supervised classification
+multiobjective nonparametric sequential prediction
+understanding the internet topology evolution dynamics
+rio: minimizing user interaction in ontology debugging
+multithreaded graph coloring algorithm for shared memory architecture
+souper: a synthesizing superoptimizer
+monotone and online fair division
+modular autoencoders for ensemble feature extraction
+soft contract verification
+super interaction neural network
+generating nonlinear interpolants by semidefinite programming
+monoidal functional dependencies
+mining semistructured data
+multiauthority attribute-based access control with smart contract
+shortcut hulls: vertex-restricted outer simplifications of polygons
+detecting weakly simple polygons
+on polynomial approximations over $\mathbb{z}/2^k\mathbb{z}$
+internet protocol version 6: dead or alive?
+a minimal core calculus for solidity contracts
+making news understandable to computers
+axiomatizing rectangular grids with no extra nonunary relations
+hypernyms under siege: linguistically-motivated artillery for hypernymy detection
+lookup: vision-only real-time precise underground localisation for autonomous mining vehicles
+semisupervised active regression
+partly supervised multitask learning
+effective multistep temporal-difference learning for nonlinear function approximation
+subcomputable boundedness randomness
+enhancing autonomy transparency: an option-centric rationale approach
+polynomially correlated knapsack is np-complete
+understanding space in proof complexity: separations and trade-offs via substitutions
+automating legal research through data mining
+understanding graph and understanding map and their potential applications
+subgame solving without common knowledge
+on nonstructural subtype entailment
+multidensity sketch-to-image translation network
+adaptive content-based routing using subscription subgrouping in structured overlays
+debugging crashes using continuous contrast set mining
+transforming outermost into context-sensitive rewriting
+hyperbolic busemann learning with ideal prototypes
+community-based cyberreading for information understanding
+view-centric modeling of automotive logical architectures
+transaction support over redis: an overview
+multigraph convolution collaborative filtering
+persistent flows and nonreciprocal interactions in deterministic networks
+runtime verification over outoforder streams
+maximizing broadcast throughput under ultralowpower constraints
+interactive art to go
+nrmvs: nonrigid multiview stereo
+malware analysis using multiple api sequence mining control flow graph
+on $r$-guarding thin orthogonal polygons
+domain semirings united
+digital transformation in airport ground operations
+balancing between overweighting and underweighting in supervised term weighting
+sidechains and interoperability
+archaeodal: a data lake for archaeological data management and analytics
+m2tr: multimodal multiscale transformers for deepfake detection
+mvsr-nat: multiview subset regularization for nonautoregressive machine translation
+high-utility itemset mining for subadditive monotone utility functions
+transforming building industry and health outcomes through social data-supported design
+explainable outfit recommendation with joint outfit matching and comment generation
+counting minimal transversals of $\beta$-acyclic hypergraphs
+software transactional memory with interactions
+weak bisimulations for labelled transition systems weighted over semirings
+contrastive learning for recommender system
+maintaining triangle queries under updates
+egalitarian resource sharing over multiple rounds
+hypergraph based database partitioning for transactional workloads
+motion-compensated autonomous scanning for tumour localisation using intraoperative ultrasound
+stratified outsourcing theory
+trigan: image-to-image translation for multisource domain adaptation
+isomorphic data type transformations
+document classification using expectation maximization with semi supervised learning
+caching in multidimensional databases
+strong duality for a multiplegood monopolist
+artificial creations: ascription, ownership, time-specific monopolies
+function + action = interaction
+efficient multiagent global navigation using interpolating bridges
+interval influence diagrams
+multipletree push-based overlay streaming
+delaunay triangulation of manifolds
+the option-critic architecture
+progressive multigranularity training for nonautoregressive translation
+automatic recognition of dyslalia affecting pre-scholars
+maximizing monotone submodular functions over the integer lattice
+on automata with boundary
+underwater inspection and intervention dataset
+optimizing multitask peer prediction
+multi query optimization in glade
+a semidecidable procedure for secrecy in cryptographic protocols
+dihedral angles and orthogonal polyhedra
+self-paced multitask learning
+zero-resource translation with multilingual neural machine translation
+event-triggered transmission for linear control over communication channels
+a polynomialtime algorithm for median-closed semilinear constraints

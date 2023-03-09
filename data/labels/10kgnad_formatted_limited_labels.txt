@@ -1,0 +1,9 @@
+0	10kgnad.Web
+1	10kgnad.Panorama
+2	10kgnad.International
+3	10kgnad.Wirtschaft
+4	10kgnad.Sport
+5	10kgnad.Inland
+6	10kgnad.Etat
+7	10kgnad.Wissenschaft
+8	10kgnad.Kultur

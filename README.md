@@ -1,31 +1,86 @@
-# FLOTA 
+# FLOTA
 
-This repository contains the code and data for the ACL paper [An Embarrassingly Simple Method to Mitigate Undesirable 
-Properties of Pretrained Language Model Tokenizers](https://aclanthology.org/2022.acl-short.43.pdf). 
-The paper introduces FLOTA (Few Longest Token Approximation), a simple yet effective method
-to improve the tokenization of pretrained language models.
+[![Lint & Test](https://github.com/jnk22/flota-german/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/flota-german/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/jnk22/flota-german/branch/main/graph/badge.svg?token=Q5F44R4TTQ)](https://codecov.io/github/jnk22/flota-german)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
 
-# Dependencies
+This repository contains the code and data for the ACL paper
+[An Embarrassingly Simple Method to Mitigate Undesirable Properties of
+Pretrained Language Model Tokenizers](https://aclanthology.org/2022.acl-short.43.pdf).
+The paper introduces FLOTA (Few Longest Token Approximation), a simple yet
+effective method to improve the tokenization of pretrained language models.
 
-The code requires `Python>=3.8`, `numpy>=1.18`, `pandas>=1.1`, `torch>=1.2`, and `transformers>=4.12`.
+---
 
-# Data
+Additionally, this repository contains:
 
-The ArXiv challenge sets can be found in `data`.
+- Code structure updates
+- Alternative tokenization method, based on the original FLOTA idea
+- Additional passing of **prefix** and **suffix** vocabs to tokenizer
+- Simple HTTP API for tokenizing/encoding words
+- Improved CLI
 
-# Usage
+## Dependencies
 
-To replicate the main experiment, run the script `run_main.sh` in `src`.
-To replicate the experiment on the impact of _k_, run the script `run_k.sh` in `src`.
-To replicate the experiment with noisy input, run the script `run_noise.sh` in `src`.
+All dependencies are defined in [pyproject.toml](pyproject.toml).
 
-The scripts expect the dataset files in `data`.
+Python 3.8+ is required.
 
-# Citation
+## Installation
+
+Using **pipx**:
+
+```bash
+pipx git+https://github.com/jnk22/flota.git[presentation]
+```
+
+Using **poetry**:
+
+```bash
+git clone https://github.com/jnk22/flota
+cd flota
+poetry install --extras presentation
+```
+
+_The extra package **presentation** installs the HTTP API backend.
+This can be omitted if not required._
+
+## Usage
+
+### CLI
+
+```bash
+flota bert-base-uncased data/arxiv_cs_1e+02
+```
+
+### HTTP API
+
+The FLOTA API is a demo backend that serves an HTTP API for demo purposes.
+
+```bash
+flota-api --host 127.0.0.1 --port 8000
+```
+
+Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) or
+[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc).
+
+### Predefined Scripts
+
+_TODO_
+
+## Data
+
+- **arXiv Dataset** _(English)_
+- **[Ten Thousand German News Articles Dataset](https://tblock.github.io/10kGNAD/)** _(German)_
+
+All datasets can be found in `data`.
+
+## Citation
 
 If you use the code or data in this repository, please cite the following paper:
 
-```
+```bib
 @inproceedings{hofmann2022flota,
     title = {An Embarrassingly Simple Method to Mitigate Undesirable Properties of Pretrained Language Model Tokenizers},
     author = {Hofmann, Valentin and Sch{\"u}tze, Hinrich and Pierrehumbert, Janet},

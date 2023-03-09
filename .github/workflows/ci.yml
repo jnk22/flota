@@ -1,0 +1,57 @@
+---
+name: Lint & Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run black
+        uses: psf/black@stable
+        with:
+          jupyter: true
+          version: "~= 22.0"
+
+  test:
+    needs: format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          cache: poetry
+          python-version: "3.10"
+
+      - name: Set up shfmt
+        uses: mfinelli/setup-shfmt@v2
+        with:
+          shfmt-version: "3.6.0"
+
+      - name: Setup pre-commit
+        uses: pre-commit/action@v3.0.0
+
+      - name: Run pre-commit
+        uses: pre-commit-ci/lite-action@v1.0.1
+
+      - name: Install dependencies
+        run: poetry install --with=test
+
+      - name: Run tests
+        run: poetry run pytest --cov --cov-report=xml -n 8
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

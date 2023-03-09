@@ -1,0 +1,100 @@
+on semidiscrete subpartitions of vector-valued measures
+approximating surface areas by interpolations on triangulations
+absolutely summing multipolynomials
+skin structures on minimal hypersurfaces
+nonalternating knots and jones polynomials
+semiglobal extension of maximally complex submanifolds
+toric rings of nonsimple polyominoes
+alpha-prime hyperideals in a multiplicative hyperring
+interpretability in pra
+factorising polynomials over finite fields
+dual automorphisminvariant modules
+eulerian polynomials for multipermutations and signed multipermutations
+the anticanonical complex for nondegenerate toric complete intersections
+cohomological properties of nonstandard multigraded modules
+semistrong coloring of intersecting hypergraphs
+riesz transform on graphs under subgaussian estimates
+on transverse triangulations
+classification of finite-growth contragredient lie superalgebras
+minimal infinite submoduleclosed subcategories
+random sampling of sparse trigonometric polynomials
+on a multidimensional transport equation with nonlocal velocity
+multimarginal optimal transport on riemannian manifolds
+exit times for semimartingales under nonlinear expectation
+ultrafilter spaces on the semilattice of partitions
+the minimal automorphismfree tree
+outer automorphisms of mapping class groups of nonorientable surfaces
+lightlike hypersurfaces along spacelike submanifolds in antide sitter space
+spectral triples for noncommutative solenoidal spaces from self-coverings
+a quadratic-time algorithm for general multivariate polynomial interpolation
+quasi-complete intersection homomorphisms
+bregman nonexpansive type actions of semitopological semigroups
+hyperbolicity over function fields of quadrics
+rigidity of minimal submanifolds in hyperbolic space
+transferexpanded graphs for on-demand multimodal transit systems
+dynamic entropic repulsion for interacting interfaces
+nonstationary phase of the mala algorithm
+minimal pseudoanosov stretch factors on nonoriented surfaces
+optimal output feedback architecture for triangular lqg problems
+on serre intersection multiplicity conjecture
+trianglefree subgraphs of hypergraphs
+hyperideals of multilinear operators
+automatic rees matrix semigroups over categories
+twisting out fully irreducible automorphisms
+on hypercomplex pseudohermitian manifolds
+interpolating between hilbert-samuel and hilbert-kunz multiplicity
+multisections of 4-manifolds
+a nonfinitely based semigroup of triangular matrices
+translatability and translatable semigroups
+minimal triangulations of reducible 3-manifolds
+flow-invariant hypersurfaces in semidispersing billiards
+transversal intersection of hypersurfaces in r^5
+first-order interpolation derived from propositional interpolation
+noneuclidean contraction theory for monotone and positive systems
+carath\'{e}odory interpolation on the noncommutative polydisk
+nonlinear fourier analysis
+nonexistence of nonnegative entire solutions of semilinear elliptic systems
+infinite-dimensional supermanifolds via multilinear bundles
+modules in monoidal model categories
+trisections of nonorientable 4-manifolds
+bispectrality of multivariable racah-wilson polynomials
+on the monomorphism category of $n$-cluster tilting subcategories
+hypercontractivity, nash inequalities, and subordination for classes of nonlinear semigroups
+the minimal ideal in multiplier algebras
+some remarks about mishchenkofomenko subalgebras
+computing a minimal resolution over the steenrod algebra
+hierarchical hyperbolicity of graphs of multicurves
+cr functions on subanalytic hypersurfaces
+nonstandard transfinite digraphs
+the trisector curve is transcendental
+intersections of multicurves from dynnikov coordinates
+semicharacteristic polynomials, {\phi}-modules and skew polynomials
+multispecialization and multiasymptotic expansions
+nonstandard braid relations and chebyshev polynomials
+tensors in modelling multiparticle interactions
+hyperbolic automorphisms of free groups
+transformations of sequence spaces by multipolinomials
+semiriemannian submersions with totally umbilic fibres
+twisted alexander polynomials of hyperbolic knots
+multiplicity one theorem over characteristic 2
+monotonic invariants under blowups
+lie models of homotopy automorphism monoids and classifying fibrations
+asymptotic behavior of nonautonomous monotone and subgradient evolution equations
+an interfacefree multiscale multiorder model for traffic flow
+on canonical subfield preserving polynomials
+hypernatural numbers as ultrafilters
+multiplicity results for nonlocal elliptic problems with jumping nonlinearity
+monogenic fields arising from trinomials
+free monotone transport without a trace
+hyperoctahedral homology for involutive algebras
+transfinite diameter with generalized polynomial degree
+supercommutator (hom-)superalgebras of right (hom-)alternative superalgebras
+equivalence of multinorms
+bernstein-sato polynomials of hyperplane arrangements
+counter examples to the nonrestricted representation theory
+v. markov's problem for monotone polynomials
+two-dimensional pseudogravity model
+symmetric polynomials in tropical algebra semirings
+noncommutative lp modules
+nonsingular transformations and dimension spaces
+monotone homomorphisms on convolution semigroups

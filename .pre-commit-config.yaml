@@ -1,0 +1,55 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+        exclude: data/10kgnad_small_train.csv
+      - id: check-executables-have-shebangs
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: name-tests-test
+      - id: trailing-whitespace
+        exclude: data|results|vocabs|tests/flota_tokenizer_original_test
+      - id: end-of-file-fixer
+        exclude: data|results|vocabs|tests/flota_tokenizer_original_test
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 2.7.1
+    hooks:
+      - id: editorconfig-checker
+        exclude: data|results|vocabs
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.0.1
+    hooks:
+      - id: mypy
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.252
+    hooks:
+      - id: ruff
+  - repo: https://github.com/jendrikseipp/vulture
+    rev: v2.7
+    hooks:
+      - id: vulture
+  - repo: https://github.com/adamchainz/blacken-docs
+    rev: 1.13.0
+    hooks:
+      - id: blacken-docs
+        additional_dependencies: [black==22.12.0]
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 3.0.0
+    hooks:
+      - id: shellcheck
+      - id: shfmt
+        args: ["-i", "2"]
+  - repo: https://github.com/lovesegfault/beautysh
+    rev: v6.2.1
+    hooks:
+      - id: beautysh
+        args: ["-i", "2"]
