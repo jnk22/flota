@@ -1,5 +1,6 @@
 import argparse
-import pickle
+import json
+import torch
 from pathlib import Path
 
 import pandas as pd
@@ -102,8 +103,10 @@ def main():
             if isinstance(data, list) and isinstance(data[0], str):
                 data = (f"{x}\n" for x in data)
                 files[io_type].with_suffix(".txt").open("w").writelines(data)
+            elif isinstance(data, list) and isinstance(data[0], list):
+                json.dump(data, files[io_type].with_suffix(".json").open("w"))
             else:
-                pickle.dump(data, files[io_type].with_suffix(".pkl").open("wb"))
+                torch.save(data, files[io_type].with_suffix(".pt"))
 
     print("Cache info:")
     print(f"encode: {tok.encode.cache_info()}")
