@@ -6,16 +6,15 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
-        exclude: data/10kgnad_small_train.csv
       - id: check-executables-have-shebangs
       - id: check-case-conflict
       - id: check-merge-conflict
       - id: detect-private-key
       - id: name-tests-test
       - id: trailing-whitespace
-        exclude: data|results|vocabs|tests/flota_tokenizer_original_test
+        exclude: data|tests/flota_tokenizer_original_test|tests/flota_tokenizer_generated_test
       - id: end-of-file-fixer
-        exclude: data|results|vocabs|tests/flota_tokenizer_original_test
+        exclude: data|tests/flota_tokenizer_original_test|tests/flota_tokenizer_generated_test
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
     rev: 2.7.1
     hooks:

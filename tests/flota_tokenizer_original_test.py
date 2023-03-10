@@ -1,7 +1,7 @@
 """Tests for FLOTA module based on original implementation."""
 
 import functools
-import pickle
+import json
 from pathlib import Path  # noqa: TCH003
 
 import pytest
@@ -58,7 +58,7 @@ class TestOriginalFiles(FileBasedTest):
         output_file: Path,
     ) -> None:
         """Test tokenize method to be equal to original output."""
-        expected = pickle.load(output_file.open("rb"))
+        expected = json.load(output_file.open("rb"))
 
         test_input = input_file.read_text().splitlines()
         actual = [flota_tokenizer.tokenize(test_line) for test_line in test_input]
@@ -76,7 +76,7 @@ class TestOriginalFiles(FileBasedTest):
         output_file: Path,
     ) -> None:
         """Test encode method to be equal to original output."""
-        expected = pickle.load(output_file.open("rb"))
+        expected = json.load(output_file.open("rb"))
 
         test_input = input_file.read_text().splitlines()
         actual = [flota_tokenizer.encode(test_line) for test_line in test_input]
@@ -94,9 +94,9 @@ class TestOriginalFiles(FileBasedTest):
         output_file: Path,
     ) -> None:
         """Test __call__ method to be equal to original output."""
-        expected = pickle.load(output_file.open("rb"))
+        expected = torch.load(output_file.open("rb"))
 
-        test_input = pickle.load(input_file.open("rb"))
+        test_input = json.load(input_file.open("rb"))
         actual = [flota_tokenizer(test_line) for test_line in test_input]
 
         assert len(actual) == len(expected)

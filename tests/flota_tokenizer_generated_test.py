@@ -1,6 +1,6 @@
 """Tests for FLOTA module for generated test files."""
 
-import pickle
+import json
 from pathlib import Path  # noqa: TCH003
 
 import pytest
@@ -38,7 +38,7 @@ class TestGeneratedFiles(FileBasedTest):
         output_file: Path,
     ) -> None:
         """Test tokenize method to be equal to generated output."""
-        expected = pickle.load(output_file.open("rb"))
+        expected = json.load(output_file.open("rb"))
 
         test_input = input_file.read_text().splitlines()
         actual = [flota_tokenizer.tokenize(test_line) for test_line in test_input]

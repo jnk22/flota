@@ -40,7 +40,7 @@ class FileBasedTest:
     @pytest.fixture()
     def input_file(self, function_type: FunctionType, data: str) -> Path:
         """Input file path based on tested function and dataset."""
-        file_suffix = ".pkl" if function_type == FunctionType.CALL else ".txt"
+        file_suffix = ".json" if function_type == FunctionType.CALL else ".txt"
         file_name = f"{data}{file_suffix}"
 
         return self._build_file("input", function_type.value, file_name)
@@ -58,7 +58,8 @@ class FileBasedTest:
     ) -> Path:
         """Output file path based on tested function, dataset and tokenizer."""
         file_strict = "_strict" if strict else ""
-        file_name = f"{model}_{mode.value}_{k}{file_strict}_{data}.pkl"
+        file_suffix = ".pt" if function_type == FunctionType.CALL else ".json"
+        file_name = f"{model}_{mode.value}_{k}{file_strict}_{data}{file_suffix}"
 
         return self._build_file("output", function_type.value, file_name)
 

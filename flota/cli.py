@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import pickle
 import random
 from pathlib import Path
 from typing import Optional
@@ -23,6 +22,7 @@ from .utils import (
     Timer,
     TrainTestHelper,
     get_best_scores,
+    read_vocab,
 )
 
 IntOrNone = Optional[int]  # noqa: UP007
@@ -95,8 +95,8 @@ def main(  # noqa: PLR0915
             k=k,
             strict=strict,
             cache_size=cache_size,
-            prefix_vocab=pickle.load(prefix_vocab.open("rb")) if prefix_vocab else None,
-            suffix_vocab=pickle.load(suffix_vocab.open("rb")) if suffix_vocab else None,
+            prefix_vocab=read_vocab(prefix_vocab) if prefix_vocab else None,
+            suffix_vocab=read_vocab(suffix_vocab) if suffix_vocab else None,
         )
 
     train_noise = THETA * (noise == NoiseType.TRAIN)

@@ -216,3 +216,19 @@ def get_best_scores(file_path: Path) -> tuple[float, float] | tuple[None, None]:
 
     else:
         return max_result_1, max_result_2
+
+
+def read_vocab(path: Path) -> list[str]:
+    """Read vocabulary from file.
+
+    Parameters
+    ----------
+    path
+        Vocabulary file path.
+
+    Returns
+    -------
+    list[str]
+        List of vocabulary words.
+    """
+    return path.read_text().splitlines()

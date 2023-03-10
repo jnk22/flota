@@ -12,3 +12,10 @@ indent_size = 4
 
 [*.{yaml,yml,toml,sh}]
 indent_size = 2
+
+[tests/flota_tokenizer_{generated,original}_test/**]
+charset = unset
+indent_style = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
