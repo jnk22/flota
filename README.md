@@ -35,7 +35,7 @@ Python 3.8+ is required.
 Using **pipx**:
 
 ```bash
-pipx install git+https://github.com/jnk22/flota.git#egg=flota[backend]
+pipx install "git+https://github.com/jnk22/flota.git#egg=flota[backend]"
 ```
 
 Using **poetry**:
