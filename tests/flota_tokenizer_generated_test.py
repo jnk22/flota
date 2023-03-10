@@ -31,7 +31,7 @@ class TestGeneratedFiles(FileBasedTest):
     @pytest.mark.parametrize(
         "function_type", [FunctionType.TOKENIZE], ids=lambda x: x.value
     )
-    def test_io_tokenize(
+    def test_generated_tokenize(
         self,
         flota_tokenizer: FlotaTokenizer,
         input_file: Path,
