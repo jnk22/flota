@@ -332,7 +332,8 @@ class FlotaTokenizer(ABC):
 
         return [token for token in (prefix, *tokens, suffix) if token]
 
-    def _tensor_text_input_index(self, text: list[int]) -> slice:
+    @staticmethod
+    def _tensor_text_input_index(text: list[int]) -> slice:
         # Default index for tensor text input.
         # This defines the range of the input_ids and attention_mask.
         return slice(-len(text), None)
@@ -534,7 +535,8 @@ class BertFlotaTokenizer(FlotaTokenizer):
         # Otherwise, use reversed default.
         return tuple(reversed(super()._word_combinations(word, start=start)))
 
-    def _tensor_text_input_index(self, text: list[int]) -> slice:
+    @staticmethod
+    def _tensor_text_input_index(text: list[int]) -> slice:
         return slice(None, len(text))
 
 

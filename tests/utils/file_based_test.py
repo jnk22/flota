@@ -31,8 +31,9 @@ class FileBasedTest:
         return Path(os.path.relpath(module_path)).with_suffix("")
 
     @pytest.fixture()
+    @staticmethod
     def flota_tokenizer(
-        self, model: str, mode: FlotaMode, k: int, *, strict: bool
+        model: str, mode: FlotaMode, k: int, *, strict: bool
     ) -> FlotaTokenizer:
         """Return FlotaTokenizer based on input parameters."""
         return FlotaTokenizer.from_pretrained(model, mode, k=k, strict=strict)
