@@ -46,7 +46,7 @@ def main(  # noqa: PLR0915
     k: IntOrNone = Option(
         None,
         min=0,
-        help="Number of maximum subwords, excluding prefix/suffix. Leave empty or set to 0 for unlimited k.",
+        help="Number of maximum subwords, excluding prefix/suffix (0/None=unlimited)",
     ),
     cache_size: IntOrNone = Option(
         default=None, help="FLOTA internal cache size (0=disable, None=unlimited)"
