@@ -44,7 +44,9 @@ def main(  # noqa: PLR0915
     batch_size: int = Option(64, min=1, help="Batch size"),
     epochs: int = Option(20, min=1, help="Number of epochs"),
     k: IntOrNone = Option(
-        None, min=1, help="Number of maximum subwords, excluding prefix/suffix"
+        None,
+        min=0,
+        help="Number of maximum subwords, excluding prefix/suffix. Leave empty or set to 0 for unlimited k.",
     ),
     cache_size: IntOrNone = Option(
         default=None, help="FLOTA internal cache size (0=disable, None=unlimited)"
