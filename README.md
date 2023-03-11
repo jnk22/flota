@@ -28,7 +28,7 @@ Additionally, this repository contains:
 
 All dependencies are defined in [pyproject.toml](pyproject.toml).
 
-Python 3.8+ is required.
+Python 3.10+ is required.
 
 ## Installation
 
