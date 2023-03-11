@@ -54,6 +54,7 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage.xml
 
       - name: Code Climate Coverage Action
         uses: paambaati/codeclimate-action@v3.2.0
