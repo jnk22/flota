@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -14,7 +15,7 @@ from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from typer import Argument, Option
 
-from .enums import FlotaMode, NoiseType, RunType, TokenizeMode
+from .enums import FlotaMode, NoiseType, ResultFileExistsMode, RunType, TokenizeMode
 from .tokenizer import FlotaTokenizer
 from .utils import (
     ClassificationCollator,
@@ -62,6 +63,10 @@ def main(  # noqa: PLR0915
     mode: TokenizeMode = Option(
         TokenizeMode.FLOTA.value, case_sensitive=False, help="FLOTA mode or base"
     ),
+    results_exist: ResultFileExistsMode = Option(
+        default=ResultFileExistsMode.APPEND.value,
+        help="Overwrite, append or skip if results file already exists",
+    ),
     strict: bool = Option(default=False, help="Use strict mode for BERT model"),
 ) -> None:
     """Run FLOTA tokenization."""
@@ -76,14 +81,43 @@ def main(  # noqa: PLR0915
     }
     num_labels = datasets[RunType.TRAIN].n_classes
 
+    filename = f"{model_name}_{Path(dataset).stem}_{mode.value}_{k or 0}"
+    filename += "_prefix" if prefix_vocab else ""
+    filename += "_suffix" if suffix_vocab else ""
+    filename += f"_seed-{random_seed}" if random_seed else ""
+    filename += noise.filename_extension
+
+    results_file = Path(f"{output}/{filename}.txt")
+    times_file = Path(f"{output}/{filename}_times.txt")
+
+    best_f1_dev, best_f1_test = get_best_scores(results_file)
     print(f"Model: {model_name}")
     print(f"Mode: {mode.value}")
-    print(f"K: {k or 0}")
+    print(f"K: {k or 0 if mode != TokenizeMode.BASE else 'n/a'}")
     print(f"Learning rate: {learning_rate:.0e}")
     print(f"Epochs: {epochs:02d}")
     print(f"Data: {dataset}")
     print(f"Number of classes: {num_labels}")
     print(f"Batch size: {batch_size:02d}")
+    print(f"Random seed: {random_seed or 'n/a'}")
+    print(f"Prefix vocabulary: {prefix_vocab if mode != TokenizeMode.BASE else 'n/a'}")
+    print(f"Suffix vocabulary: {suffix_vocab if mode != TokenizeMode.BASE else 'n/a'}")
+    print(f"Best F1 so far: {best_f1_dev} (dev), {best_f1_test} (test)")
+
+    if results_file.exists():
+        print(f"Result file '{results_file}' already exists:", end=" ")
+
+        if results_exist == ResultFileExistsMode.SKIP:
+            print("Skipping run.")
+            sys.exit(0)
+
+        elif results_exist == ResultFileExistsMode.OVERWRITE:
+            print("Deleting old results.")
+            results_file.unlink()
+            times_file.unlink()
+
+        elif results_exist == ResultFileExistsMode.APPEND:
+            print("Appending results.")
 
     if mode == TokenizeMode.BASE:
         tokenizer = AutoTokenizer.from_pretrained(model_name, model_max_length=512)
@@ -123,18 +157,6 @@ def main(  # noqa: PLR0915
         )
         for run_type in RunType
     }
-
-    filename = f"{model_name}_{Path(dataset).stem}_{mode.value}_{k or 0}"
-    filename += "_prefix" if prefix_vocab else ""
-    filename += "_suffix" if suffix_vocab else ""
-    filename += f"_seed-{random_seed}" if random_seed else ""
-    filename += noise.filename_extension
-
-    results_file = Path(f"{output}/{filename}.txt")
-    times_file = Path(f"{output}/{filename}_times.txt")
-
-    best_f1_dev, best_f1_test = get_best_scores(results_file)
-    print(f"Best F1 so far: {best_f1_dev} (dev), {best_f1_test} (test)")
 
     results_file.parent.mkdir(exist_ok=True, parents=True)
     times_file.parent.mkdir(exist_ok=True, parents=True)

@@ -24,6 +24,14 @@ class TokenizeMode(Enum):
     LONGEST = FlotaMode.LONGEST.value
 
 
+class ResultFileExistsMode(Enum):
+    """Mode for handling existing results file."""
+
+    SKIP = "skip"
+    APPEND = "append"
+    OVERWRITE = "overwrite"
+
+
 class NoiseType(Enum):
     """An enum representing different types of noise."""
 
