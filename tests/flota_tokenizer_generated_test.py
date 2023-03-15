@@ -15,7 +15,7 @@ TEST_MODELS = [
     "xlnet-base-cased",
     "gpt2",
 ]
-TEST_MODES = [FlotaMode.FLOTA_DP_FRONT, FlotaMode.FLOTA_DP_BACK]
+TEST_MODES = [FlotaMode.FLOTA_DP]
 TEST_K = range(5)
 TEST_DATA = ["cs", "maths", "physics"]
 

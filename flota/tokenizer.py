@@ -132,7 +132,6 @@ class FlotaTokenizer(ABC):
         self._vocab: set[str] = set(self._tok.vocab.keys())
         self.__vocab_max_len: int = max(len(word) for word in self._vocab)
         self.__mode: FlotaMode = mode
-        self.__flota_dp_prefer_front = mode == FlotaMode.FLOTA_DP_FRONT
         self.__k: int | None = k if k and k > 0 else None
 
         self.__prefix_vocab: tuple[str, ...] = (
@@ -156,8 +155,7 @@ class FlotaTokenizer(ABC):
 
         self.__tokenize_methods: dict[FlotaMode, Callable] = {
             FlotaMode.FLOTA: self._tokenize_flota,
-            FlotaMode.FLOTA_DP_FRONT: self._tokenize_flota_dp,
-            FlotaMode.FLOTA_DP_BACK: self._tokenize_flota_dp,
+            FlotaMode.FLOTA_DP: self._tokenize_flota_dp,
             FlotaMode.FIRST: self._tokenize_first,
             FlotaMode.LONGEST: self._tokenize_longest,
         }
@@ -346,7 +344,7 @@ class FlotaTokenizer(ABC):
 
     def _tokenize_flota_dp(self, word: str, *, start: bool) -> list[str]:
         # FLOTA dynamic tokenization method using memoization.
-        tokens = self.__build_dynamic(word, self.__k, start=start).tokens
+        tokens = self.__build_dynamic(word, start=start).tokens
         self.__build_dynamic.cache_clear()  # type: ignore[attr-defined]
 
         return tokens
@@ -414,34 +412,24 @@ class FlotaTokenizer(ABC):
 
         return {}, None
 
-    def __build_dynamic(
-        self, word: str, recursive_k: int | None, start_index: int = 0, *, start: bool
-    ) -> DPContainer:
+    def __build_dynamic(self, word: str, index: int = 0, *, start: bool) -> DPContainer:
         # Dynamic programming method for FLOTA tokenization.
         # Base case. For unlimited 'k', this will only be reached if
         # word is empty.
-        if (recursive_k is not None and recursive_k < 0) or not word:
+        if not word:
             return DPContainer()
 
         # Add current token token to results if whole word is in vocabulary.
         token, first_match = self.__word_in_vocab(word, start=start)
         if token:
-            item = DPItem(
-                token,
-                start_index,
-                word,
-                first_match=first_match,
-                prefer_front=self.__flota_dp_prefer_front,
-            )
-            return DPContainer({item})
+            return DPContainer({DPItem(token, word, index, first_match=first_match)})
 
         # Generate all possible subword pairs with their respective scores.
         token_candidates = []
-        next_k = recursive_k - 1 if recursive_k is not None else None
         split_words = ((word[:i], word[i:], i) for i in range(1, len(word)))
         for sw_l, sw_r, i in split_words:
-            dp_l = self.__build_dynamic(sw_l, next_k, start_index, start=True and start)
-            dp_r = self.__build_dynamic(sw_r, next_k, start_index + i, start=False)
+            dp_l = self.__build_dynamic(sw_l, index, start=True and start)
+            dp_r = self.__build_dynamic(sw_r, index + i, start=False)
             token_candidates.append(DPContainer.from_structs(self.__k, dp_l, dp_r))
 
         # Reverse to keep longer parts of the beginning of the word.

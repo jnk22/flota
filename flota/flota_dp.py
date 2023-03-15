@@ -8,7 +8,8 @@ from dataclasses import KW_ONLY, InitVar, dataclass, field
 from itertools import chain
 
 
-@dataclass(order=True, frozen=True)
+@functools.total_ordering
+@dataclass(eq=True, frozen=True)
 class DPItem:
     """A dynamic programming item that represents a token.
 
@@ -53,28 +54,25 @@ class DPItem:
         An instance of the DPItem class.
     """
 
-    token: str = field(compare=False)
-    score: int = field(init=False)
-    token_index: int = field(compare=False, init=False)
-    sort_index: int = field(init=False)
-
-    index: InitVar[int]
+    token: str
     word: InitVar[str]
+    index: int
+    score: int = field(init=False)
     _: KW_ONLY
-    first_match: InitVar[bool]
-    prefer_front: InitVar[bool] = True
+    first_match: bool
 
-    def __post_init__(
-        self,
-        index: int,
-        word: str,
-        first_match: bool,  # noqa: FBT001
-        prefer_front: bool,  # noqa: FBT001
-    ) -> None:
-        """Initialize the DPItem object with the provided parameters."""
-        object.__setattr__(self, "token_index", index)
-        object.__setattr__(self, "sort_index", (1 - 2 * prefer_front) * index)
-        object.__setattr__(self, "score", len(word) ** 3 + int(first_match))
+    def __post_init__(self, word: str) -> None:
+        """TODO."""
+        # Set the score of this DPItem via set attribute access.
+        object.__setattr__(self, "score", len(word) ** 2)
+
+    def __gt__(self, other: object) -> bool:
+        """TODO."""
+        return (
+            (self.score > other.score or self.first_match and not other.first_match)
+            if isinstance(other, DPItem)
+            else False
+        )
 
 
 @functools.total_ordering
@@ -157,17 +155,11 @@ class DPContainer:
 
     def __eq__(self, other: object) -> bool:
         """Check if the current container's score equals another's score."""
-        if isinstance(other, DPContainer):
-            return self.score == other.score
-
-        return NotImplemented
+        return self.score == other.score if isinstance(other, DPContainer) else False
 
     def __lt__(self, other: object) -> bool:
         """Check if the current container's score is less than another's score."""
-        if isinstance(other, DPContainer):
-            return self.score < other.score
-
-        return NotImplemented
+        return self.score < other.score if isinstance(other, DPContainer) else False
 
     @property
     def score(self) -> int:
@@ -181,4 +173,4 @@ class DPContainer:
     @property
     def tokens(self) -> list[str]:
         """Return all tokens in a container in original word's order."""
-        return [item.token for item in sorted(self.items, key=lambda i: i.token_index)]
+        return [item.token for item in sorted(self.items, key=lambda i: i.index)]

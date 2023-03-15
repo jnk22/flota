@@ -80,8 +80,10 @@ def main(  # noqa: PLR0915
         for run_type in RunType
     }
     num_labels = datasets[RunType.TRAIN].n_classes
+    k_supported = mode not in {TokenizeMode.BASE, TokenizeMode.FLOTA_DP}
 
-    filename = f"{model_name}_{Path(dataset).stem}_{mode.value}_{k or 0}"
+    filename = f"{model_name}_{Path(dataset).stem}_{mode.value}"
+    filename += f"_{k or 0}" if k_supported else ""
     filename += "_prefix" if prefix_vocab else ""
     filename += "_suffix" if suffix_vocab else ""
     filename += f"_seed-{random_seed}" if random_seed else ""
@@ -93,7 +95,7 @@ def main(  # noqa: PLR0915
     best_f1_dev, best_f1_test = get_best_scores(results_file)
     print(f"Model: {model_name}")
     print(f"Mode: {mode.value}")
-    print(f"K: {k or 0 if mode != TokenizeMode.BASE else 'n/a'}")
+    print(f"K: {k or 0 if k_supported else 'n/a'}")
     print(f"Learning rate: {learning_rate:.0e}")
     print(f"Epochs: {epochs:02d}")
     print(f"Data: {dataset}")

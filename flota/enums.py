@@ -7,8 +7,7 @@ class FlotaMode(Enum):
     """An enum representing the different modes of the FLOTA application."""
 
     FLOTA = "flota"
-    FLOTA_DP_FRONT = "flota-dp-front"
-    FLOTA_DP_BACK = "flota-dp-back"
+    FLOTA_DP = "flota-dp"
     FIRST = "first"
     LONGEST = "longest"
 
@@ -18,8 +17,7 @@ class TokenizeMode(Enum):
 
     BASE = "base"
     FLOTA = FlotaMode.FLOTA.value
-    FLOTA_DP_FRONT = FlotaMode.FLOTA_DP_FRONT.value
-    FLOTA_DP_BACK = FlotaMode.FLOTA_DP_BACK.value
+    FLOTA_DP = FlotaMode.FLOTA_DP.value
     FIRST = FlotaMode.FIRST.value
     LONGEST = FlotaMode.LONGEST.value
 

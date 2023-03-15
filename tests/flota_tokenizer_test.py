@@ -68,7 +68,7 @@ def test_flota_dp_words() -> None:
     expected = ["visual", "##ization"]
 
     flota_tokenizer = FlotaTokenizer.from_pretrained(
-        "distilbert-base-uncased", FlotaMode.FLOTA_DP_BACK, k=3
+        "distilbert-base-uncased", FlotaMode.FLOTA_DP
     )
     actual = flota_tokenizer.tokenize(test_word)
 
