@@ -16,7 +16,7 @@ TEST_MODELS = [
     "gpt2",
 ]
 TEST_MODES = [FlotaMode.FLOTA_DP]
-TEST_K = range(5)
+TEST_K = (None,)
 TEST_DATA = ["cs", "maths", "physics"]
 
 

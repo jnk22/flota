@@ -427,10 +427,10 @@ class FlotaTokenizer(ABC):
         # Generate all possible subword pairs with their respective scores.
         token_candidates = []
         split_words = ((word[:i], word[i:], i) for i in range(1, len(word)))
-        for sw_l, sw_r, i in split_words:
-            dp_l = self.__build_dynamic(sw_l, index, start=True and start)
-            dp_r = self.__build_dynamic(sw_r, index + i, start=False)
-            token_candidates.append(DPContainer.from_structs(self.__k, dp_l, dp_r))
+        for sw_left, sw_right, i in split_words:
+            dp_left = self.__build_dynamic(sw_left, index, start=True and start)
+            dp_right = self.__build_dynamic(sw_right, index + i, start=False)
+            token_candidates.append(DPContainer.from_structs(dp_left, dp_right))
 
         # Reverse to keep longer parts of the beginning of the word.
         return max(reversed(token_candidates), default=DPContainer())

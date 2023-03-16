@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import functools
-import heapq
-from dataclasses import KW_ONLY, InitVar, dataclass, field
+from dataclasses import KW_ONLY, dataclass, field
 from itertools import chain
 
 
-@functools.total_ordering
-@dataclass(eq=True, frozen=True)
+@dataclass(frozen=True)
 class DPItem:
-    """A dynamic programming item that represents a token.
+    """An item representing a token and its score.
 
     The DPItem class is used by the dynamic programming algorithm in the
     FlotaTokenizer class to represent a token in a sequence of tokens.
@@ -20,33 +18,18 @@ class DPItem:
     ----------
     token
         The token represented by this DPItem.
-    index
-        The index of this DPItem in the sequence of tokens.
     word
         The word that this DPItem's token represents.
+    index
+        The index of this DPItem in the sequence of tokens.
     first_match
         A flag indicating whether the represented word is the first in a
         checked sequence of words. If True, then the DPItem's score is
         increased.
-    prefer_front
-        A flag indicating whether this DPItem should be sorted before
-        other DPItems with the same score. If True, then DPItems with
-        lower indices will be sorted before DPItems with higher
-        indices.
 
     Attributes
     ----------
     score
-        The score assigned to this DPItem by the dynamic programming
-        algorithm. The score is calculated based on the length of the
-        word represented by the token and whether the DPItem is the
-        first in the sequence to match its word.
-    sort_index
-        The index used to sort DPItems with the same score. If
-        prefer_front is True, then the sort_index is negative.
-        Otherwise, the sort_index is positive.
-    token_index
-        The index of this DPItem in the sequence of tokens.
 
     Returns
     -------
@@ -55,28 +38,25 @@ class DPItem:
     """
 
     token: str
-    word: InitVar[str]
+    word: str
     index: int
-    score: int = field(init=False)
     _: KW_ONLY
     first_match: bool
 
-    def __post_init__(self, word: str) -> None:
-        """TODO."""
-        # Set the score of this DPItem via set attribute access.
-        object.__setattr__(self, "score", len(word) ** 2)
+    @property
+    def score(self) -> tuple[int, bool, int]:
+        """Score tuple.
 
-    def __gt__(self, other: object) -> bool:
-        """TODO."""
-        return (
-            (self.score > other.score or self.first_match and not other.first_match)
-            if isinstance(other, DPItem)
-            else False
-        )
+        The score consists of three elements:
+            1. length of word quadrupled
+            2. first_match flag
+            3. index of the DPItem in the sequence of tokens.
+        """
+        return len(self.word) ** 2, self.first_match, self.index
 
 
 @functools.total_ordering
-@dataclass
+@dataclass(frozen=True)
 class DPContainer:
     """A container for dynamic programming items.
 
@@ -90,14 +70,6 @@ class DPContainer:
         The set of DPItem objects to store in this container. Defaults to
         an empty set.
 
-    Attributes
-    ----------
-    score
-        The score of this container, which is the sum of the scores of all
-        DPItem objects in the set.
-    tokens
-        A list of tokens in this container, sorted by token index.
-
     Notes
     -----
     This class is decorated with the functools.total_ordering decorator
@@ -108,28 +80,28 @@ class DPContainer:
     --------
     Creating a DPContainer with a set of DPItem objects:
 
-    >>> dp_items = {DPItem('token', 0, 'token', first_match=True), DPItem('ization', 5, 'ization', first_match=False)}
+    >>> dp_items = {DPItem('token', 'token', 0, first_match=True), DPItem('ization', 'ization', 5, first_match=False)}
     >>> dp_container = DPContainer(dp_items)
     >>> dp_container.score
-    469
+    (74, 1, 5)
     >>> dp_container.tokens
     ['token', 'ization']
 
     Creating a DPContainer from multiple DPContainers:
 
-    >>> dp_container1 = DPContainer({DPItem('vis', 0, 'vis', first_match=True), DPItem('##ua', 3, 'ua', first_match=True)})
-    >>> dp_container2 = DPContainer({DPItem('##li', 5, 'li', first_match=True), DPItem('##zation', 7, 'zation', first_match=True)})
-    >>> dp_container = DPContainer.from_structs(3, dp_container1, dp_container2)
+    >>> dp_container1 = DPContainer({DPItem('vis', 'vis', 0, first_match=True), DPItem('##ua', 'ua', 3, first_match=True)})
+    >>> dp_container2 = DPContainer({DPItem('##li', 'li', 5, first_match=True), DPItem('##zation', 'zation', 7, first_match=True)})
+    >>> dp_container = DPContainer.from_structs(dp_container1, dp_container2)
     >>> dp_container.score
-    254
+    (53, 4, 15)
     >>> dp_container.tokens
-    ['vis', '##ua', '##zation']
+    ['vis', '##ua', '##li', '##zation']
     """  # noqa: E501
 
     items: set[DPItem] = field(default_factory=set)
 
     @classmethod
-    def from_structs(cls, k: int | None, *dp_structs: DPContainer) -> DPContainer:
+    def from_structs(cls, *dp_structs: DPContainer) -> DPContainer:
         """Create a new DPContainer from multiple DPContainers.
 
         This method creates a new DPContainer by combining DPContainers from
@@ -138,9 +110,6 @@ class DPContainer:
 
         Parameters
         ----------
-        k : int or None
-            The maximum number of DPItems to include in the new DPContainer.
-            If k is None, all DPItems will be included.
         *dp_structs : DPContainer
             A variable number of DPContainers to combine.
 
@@ -150,8 +119,7 @@ class DPContainer:
             A new DPContainer containing DPItems from all DPContainers passed as
             arguments.
         """
-        items = chain.from_iterable(dps.items for dps in dp_structs)
-        return cls(set(heapq.nlargest(k, items) if k else items))
+        return cls(set(chain.from_iterable(dps.items for dps in dp_structs)))
 
     def __eq__(self, other: object) -> bool:
         """Check if the current container's score equals another's score."""
@@ -162,13 +130,14 @@ class DPContainer:
         return self.score < other.score if isinstance(other, DPContainer) else False
 
     @property
-    def score(self) -> int:
+    def score(self) -> tuple[int, int, int]:
         """Get the score of the container.
 
         The score of a container is the sum of the scores of all token
         items in the container.
         """
-        return sum(item.score for item in self.items)
+        scores = (item.score for item in self.items)
+        return tuple(sum(score) for score in zip(*scores, strict=True))
 
     @property
     def tokens(self) -> list[str]:

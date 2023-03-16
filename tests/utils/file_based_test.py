@@ -58,9 +58,10 @@ class FileBasedTest:
         strict: bool,
     ) -> Path:
         """Output file path based on tested function, dataset and tokenizer."""
+        file_k = f"_{k}" if mode != FlotaMode.FLOTA_DP else ""
         file_strict = "_strict" if strict else ""
         file_suffix = ".pt" if function_type == FunctionType.CALL else ".json"
-        file_name = f"{model}_{mode.value}_{k}{file_strict}_{data}{file_suffix}"
+        file_name = f"{model}_{mode.value}{file_k}{file_strict}_{data}{file_suffix}"
 
         return self._build_file("output", function_type.value, file_name)
 
