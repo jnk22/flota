@@ -130,7 +130,7 @@ class DPContainer:
         return self.score < other.score if isinstance(other, DPContainer) else False
 
     @property
-    def score(self) -> tuple[int, int, int]:
+    def score(self) -> tuple[int, ...]:
         """Get the score of the container.
 
         The score of a container is the sum of the scores of all token
