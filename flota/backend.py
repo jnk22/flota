@@ -8,15 +8,12 @@ demo purposes.
 """
 
 import fastapi
-import typer
-import uvicorn
 from fastapi import Depends, Query
 from pydantic import BaseModel, Field
 
-from flota import FlotaMode, FlotaTokenizer
+from flota import AutoFlotaTokenizer, FlotaMode
 
 app = fastapi.FastAPI()
-cli = typer.Typer()
 
 
 class FlotaTokenizerInput(BaseModel):
@@ -45,25 +42,8 @@ async def tokenize(
     prefix_vocab: list[str] | None = Query(default=None),
     suffix_vocab: list[str] | None = Query(default=None),
 ) -> list[str]:
-    """Tokenize input word using FlotaTokenizer.
-
-    Parameters
-    ----------
-    word
-        Input word to tokenize.
-    flota_tokenizer_input
-        Input fields for FlotaTokenizer.
-    prefix_vocab
-        List of prefix vocabulary.
-    suffix_vocab
-        List of suffix vocabulary.
-
-    Returns
-    -------
-    list[str]
-        Tokenized input word.
-    """
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    """Tokenize input word using FlotaTokenizer."""
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         flota_tokenizer_input.model,
         flota_tokenizer_input.mode,
         k=flota_tokenizer_input.k,
@@ -81,25 +61,8 @@ async def encode(
     prefix_vocab: list[str] | None = Query(default=None),
     suffix_vocab: list[str] | None = Query(default=None),
 ) -> list[int]:
-    """Encode input text using FlotaTokenizer.
-
-    Parameters
-    ----------
-    text
-        Input text to encode.
-    flota_tokenizer_input: FlotaTokenizerInput
-        Input fields for FlotaTokenizer.
-    prefix_vocab
-        List of prefix vocabulary.
-    suffix_vocab
-        List of suffix vocabulary.
-
-    Returns
-    -------
-    list[int]
-        Encoded input text.
-    """
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    """Encode input text using FlotaTokenizer."""
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         flota_tokenizer_input.model,
         flota_tokenizer_input.mode,
         k=flota_tokenizer_input.k,
@@ -108,12 +71,3 @@ async def encode(
         suffix_vocab=suffix_vocab,
     )
     return flota_tokenizer.encode(text)
-
-
-@cli.command()
-def main(
-    host: str = typer.Option("127.0.0.1", help="Listen host."),
-    port: int = typer.Option(8000, help="Listen port."),
-) -> None:
-    """Run FLOTA API backend server."""
-    uvicorn.run(app, host=host, port=port)

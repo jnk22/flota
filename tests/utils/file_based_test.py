@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from flota import FlotaMode, FlotaTokenizer
+from flota import AutoFlotaTokenizer, FlotaMode, FlotaTokenizer
 
 
 class FunctionType(Enum):
@@ -36,7 +36,7 @@ class FileBasedTest:
         model: str, mode: FlotaMode, k: int, *, strict: bool
     ) -> FlotaTokenizer:
         """Return FlotaTokenizer based on input parameters."""
-        return FlotaTokenizer.from_pretrained(model, mode, k=k, strict=strict)
+        return AutoFlotaTokenizer.from_pretrained(model, mode, k=k, strict=strict)
 
     @pytest.fixture()
     def input_file(self, function_type: FunctionType, data: str) -> Path:

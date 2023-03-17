@@ -54,7 +54,6 @@ mypy = "^1.1.1"
 
 [tool.poetry.scripts]
 flota = "flota.cli:cli"
-flota-api = { callable = "flota.backend:cli", extras = ["backend"] }
 
 [build-system]
 requires = ["poetry-core>=1.3.0"]

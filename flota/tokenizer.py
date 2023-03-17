@@ -35,65 +35,7 @@ class CacheInfo(NamedTuple):
 class FlotaTokenizer(ABC):
     """Abstract base class for FLOTA tokenization methods."""
 
-    @staticmethod
-    def from_pretrained(
-        model: str,
-        mode: FlotaMode,
-        *,
-        k: int | None = None,
-        model_max_length: int = 512,
-        **kwargs: int | bool | Iterable[str] | None,
-    ) -> FlotaTokenizer:
-        """Create a FlotaTokenizer class instance from a pre-trained model.
-
-        Parameters
-        ----------
-        model
-            The name of the pre-trained model to load.
-        mode
-            The mode to use for the model.
-        k
-            The number of clusters to use for the model.
-        model_max_length
-            Maximum length of the encoded text.
-        **kwargs
-            Additional keyword arguments to pass to the tokenizer.
-
-        Returns
-        -------
-        FlotaTokenizer
-            A class instance of the FlotaTokenizer that matches the
-            specified pre-trained model.
-
-        Raises
-        ------
-        UnsupportedModelError
-            If the specified model is not supported by FlotaTokenizer.
-        PretrainedTokenizerLoadError
-            If the tokenizer could not be loaded from the pre-trained model.
-        """
-        try:
-            # Find matching FlotaTokenizer class for the specified model.
-            flota_tokenizer_class = next(
-                ft_class
-                for ft_key, ft_class in _CLASS_MAPPING.items()
-                if ft_key in model
-            )
-
-            pretrained_tokenizer = AutoTokenizer.from_pretrained(
-                model, model_max_length=model_max_length
-            )
-
-        except StopIteration as exc:
-            err_msg = f"Model '{model}' is not supported by FlotaTokenizer"
-            raise UnsupportedModelError(err_msg) from exc
-
-        except (OSError, ValueError) as exc:
-            err_msg = f"Could not load tokenizer from pretrained model '{model}'"
-            raise PretrainedTokenizerLoadError(err_msg) from exc
-
-        else:
-            return flota_tokenizer_class(pretrained_tokenizer, mode, k=k, **kwargs)
+    __SPECIAL = "-"
 
     def __init__(
         self,
@@ -222,7 +164,7 @@ class FlotaTokenizer(ABC):
 
         Examples
         --------
-        >>> tokenizer = FlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=5)
+        >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=5)
         >>> texts = ['Sample text', 'to be tokenized']
         >>> tokenized = tokenizer(texts)
         >>> tokenized['input_ids']
@@ -266,7 +208,7 @@ class FlotaTokenizer(ABC):
 
         Examples
         --------
-        >>> tokenizer = FlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=3)
+        >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=3)
         >>> text = 'This is a sample text to be tokenized and encoded'
         >>> tokenizer.encode(text)
         [101, 1188, 1110, 170, 6876, 3087, 1106, 1129, 22559, 2200, 1105, 12544, 102]
@@ -303,7 +245,7 @@ class FlotaTokenizer(ABC):
 
         Examples
         --------
-        >>> tokenizer = FlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=2)
+        >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=2)
         >>> word = 'example'
         >>> tokenizer.tokenize(word)
         ['example']
@@ -383,7 +325,7 @@ class FlotaTokenizer(ABC):
         self, word: str, recursive_k: int | None, *, start: bool
     ) -> dict[int, str]:
         # Return a dictionary of subword indices and subwords.
-        finished_word = len(word) * _FLOTA_SPECIAL
+        finished_word = len(word) * self.__SPECIAL
         if (recursive_k is not None and recursive_k < 1) or finished_word == word:
             return {}
 
@@ -402,13 +344,13 @@ class FlotaTokenizer(ABC):
         # Find the longest subword in the word that is in the vocabulary.
         for j in range(min(len(word), self.__vocab_max_len), 0, -1):
             for i in range(len(word) - j + 1):
-                if word[i] == _FLOTA_SPECIAL:
+                if word[i] == self.__SPECIAL:
                     continue
 
                 subword = word[i : i + j]
                 token, _ = self.__word_in_vocab(subword, start=(start and i == 0))
                 if token:
-                    return {i: token}, word[:i] + j * _FLOTA_SPECIAL + word[i + j :]
+                    return {i: token}, word[:i] + j * self.__SPECIAL + word[i + j :]
 
         return {}, None
 
@@ -558,9 +500,72 @@ class GPT2FlotaTokenizer(FlotaTokenizer):
         return super()._tokenize_longest(f" {word}", **kwargs)
 
 
-_FLOTA_SPECIAL = "-"
-_CLASS_MAPPING = {
-    "bert": BertFlotaTokenizer,
-    "xlnet": XLNetFlotaTokenizer,
-    "gpt2": GPT2FlotaTokenizer,
-}
+class AutoFlotaTokenizer:
+    """Class for creating model specific `FlotaTokenizer`."""
+
+    __MAPPING = {
+        "bert": BertFlotaTokenizer,
+        "xlnet": XLNetFlotaTokenizer,
+        "gpt2": GPT2FlotaTokenizer,
+    }
+
+    @classmethod
+    def from_pretrained(
+        cls,
+        model: str,
+        mode: FlotaMode,
+        *,
+        k: int | None = None,
+        model_max_length: int = 512,
+        **kwargs: int | bool | Iterable[str] | None,
+    ) -> FlotaTokenizer:
+        """Create a FlotaTokenizer class instance from a pre-trained model.
+
+        Parameters
+        ----------
+        model
+            The name of the pre-trained model to load.
+        mode
+            The mode to use for the model.
+        k
+            The number of clusters to use for the model.
+        model_max_length
+            Maximum length of the encoded text.
+        **kwargs
+            Additional keyword arguments to pass to the tokenizer.
+
+        Returns
+        -------
+        FlotaTokenizer
+            A class instance of the FlotaTokenizer that matches the
+            specified pre-trained model.
+
+        Raises
+        ------
+        UnsupportedModelError
+            If the specified model is not supported by FlotaTokenizer.
+        PretrainedTokenizerLoadError
+            If the tokenizer could not be loaded from the pre-trained model.
+        """
+        try:
+            # Find matching FlotaTokenizer class for the specified model.
+            flota_tokenizer_class = next(
+                ft_class
+                for ft_key, ft_class in cls.__MAPPING.items()
+                if ft_key in model
+            )
+
+            pretrained_tokenizer = AutoTokenizer.from_pretrained(
+                model, model_max_length=model_max_length
+            )
+
+        except StopIteration as exc:
+            err_msg = f"Model '{model}' is not supported by FlotaTokenizer"
+            raise UnsupportedModelError(err_msg) from exc
+
+        except (OSError, ValueError) as exc:
+            err_msg = f"Could not load tokenizer from pretrained model '{model}'"
+            raise PretrainedTokenizerLoadError(err_msg) from exc
+
+        else:
+            return flota_tokenizer_class(pretrained_tokenizer, mode, k=k, **kwargs)

@@ -1,2 +1,2 @@
 from .enums import FlotaMode
-from .tokenizer import CacheInfo, FlotaTokenizer
+from .tokenizer import AutoFlotaTokenizer, CacheInfo, FlotaTokenizer

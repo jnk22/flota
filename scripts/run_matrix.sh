@@ -7,12 +7,12 @@ CUDA_DEVICE=$1
 # FLOTA-DP: English => 2x6 = 12
 for model in bert-base-uncased xlnet-base-cased; do
   for data in arxiv_cs_1e+02 arxiv_maths_1e+02 arxiv_physics_1e+02 arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
-    flota --mode flota-dp --random-seed 123 --epochs 25 --cuda-device "$CUDA_DEVICE" "$model" "data/$data"
+    flota run --mode flota-dp --random-seed 123 --epochs 25 --cuda-device "$CUDA_DEVICE" "$model" "data/$data"
   done
 done
 
 # FLOTA-DP: German => 1
-flota \
+flota run \
   --mode flota-dp \
   --random-seed 123 \
   --epochs 25 \
@@ -24,14 +24,14 @@ flota \
 for model in bert-base-uncased xlnet-base-cased; do
   for data in arxiv_cs_1e+02 arxiv_maths_1e+02 arxiv_physics_1e+02 arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
     for k in 0 2 3 4; do
-      flota --mode flota --k "$k" --random-seed 123 --epochs 25 --cuda-device "$CUDA_DEVICE" "$model" "data/$data"
+      flota run --mode flota --k "$k" --random-seed 123 --epochs 25 --cuda-device "$CUDA_DEVICE" "$model" "data/$data"
     done
   done
 done
 
 # FLOTA: German => 4
 for k in 0 2 3 4; do
-  flota \
+  flota run \
     --mode flota \
     --k "$k" \
     --random-seed 123 \
@@ -44,12 +44,12 @@ done
 # BASE: English => 2x6 => 12
 for model in bert-base-uncased xlnet-base-cased; do
   for data in arxiv_cs_1e+02 arxiv_maths_1e+02 arxiv_physics_1e+02 arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
-    flota --mode base --random-seed 123 --epochs 25 --cuda-device "$CUDA_DEVICE" "$model" "data/$data"
+    flota run --mode base --random-seed 123 --epochs 25 --cuda-device "$CUDA_DEVICE" "$model" "data/$data"
   done
 done
 
 # BASE: German => 1
-flota \
+flota run \
   --mode base \
   --random-seed 123 \
   --epochs 25 \
@@ -61,7 +61,7 @@ flota \
 for model in bert-base-uncased xlnet-base-cased; do
   for data in arxiv_cs_1e+02 arxiv_maths_1e+02 arxiv_physics_1e+02 arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
     for k in 0 2 3 4; do
-      flota \
+      flota run \
         --mode flota \
         --k "$k" \
         --random-seed 123 \
@@ -78,7 +78,7 @@ done
 for model in bert-base-uncased xlnet-base-cased; do
   for data in arxiv_cs_1e+02 arxiv_maths_1e+02 arxiv_physics_1e+02 arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
     for k in 0 2 3 4; do
-      flota \
+      flota run \
         --mode flota \
         --k "$k" \
         --random-seed 123 \
@@ -95,7 +95,7 @@ done
 for model in bert-base-uncased xlnet-base-cased; do
   for data in arxiv_cs_1e+02 arxiv_maths_1e+02 arxiv_physics_1e+02 arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
     for k in 0 2 3 4; do
-      flota \
+      flota run \
         --mode flota \
         --k "$k" \
         --random-seed 123 \
@@ -111,7 +111,7 @@ done
 
 # FLOTA: German (Prefixes) => 4
 for k in 0 2 3 4; do
-  flota \
+  flota run \
     --mode flota \
     --k "$k" \
     --random-seed 123 \
@@ -124,7 +124,7 @@ done
 
 # FLOTA: German (Suffixes) => 4
 for k in 0 2 3 4; do
-  flota \
+  flota run \
     --mode flota \
     --k "$k" \
     --random-seed 123 \
@@ -137,7 +137,7 @@ done
 
 # FLOTA: German (Prefixes+Suffixes) => 4
 for k in 0 2 3 4; do
-  flota \
+  flota run \
     --mode flota \
     --k "$k" \
     --random-seed 123 \

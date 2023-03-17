@@ -4,14 +4,14 @@ import itertools
 
 import pytest
 
-from flota import CacheInfo, FlotaMode, FlotaTokenizer
+from flota import AutoFlotaTokenizer, CacheInfo, FlotaMode
 from flota.exceptions import PretrainedTokenizerLoadError, UnsupportedModelError
 
 
 @pytest.mark.parametrize("cache_size", [-128, -1, 0])
 def test_flota_tokenizer_cache_disabled(cache_size: int) -> None:
     """Test various cache sizes for FLOTA tokenizer."""
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         "distilbert-base-uncased", FlotaMode.FLOTA, cache_size=cache_size
     )
 
@@ -28,7 +28,7 @@ def test_flota_tokenizer_cache_disabled(cache_size: int) -> None:
 @pytest.mark.parametrize("cache_size", [10, 50, 100])
 def test_flota_tokenizer_cache_fixed_without_replacement(cache_size: int) -> None:
     """Test various cache sizes for FLOTA tokenizer."""
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         "distilbert-base-uncased", FlotaMode.FLOTA, cache_size=cache_size
     )
 
@@ -52,7 +52,7 @@ def test_flota_tokenizer_cache_fixed_without_replacement(cache_size: int) -> Non
 
 def test_flota_tokenizer_cache_size_unlimited() -> None:
     """Test various cache sizes for FLOTA tokenizer."""
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         "distilbert-base-uncased", FlotaMode.FLOTA, cache_size=None
     )
 
@@ -67,7 +67,7 @@ def test_flota_dp_words() -> None:
 
     expected = ["visual", "##ization"]
 
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         "distilbert-base-uncased", FlotaMode.FLOTA_DP
     )
     actual = flota_tokenizer.tokenize(test_word)
@@ -87,7 +87,7 @@ def test_prefix_vocab_order() -> None:
     expected = ["anti", "##pas", "##ti"]
 
     for vocab in [prefix_vocab, prefix_vocab_reversed]:
-        tokenizer = FlotaTokenizer.from_pretrained(
+        tokenizer = AutoFlotaTokenizer.from_pretrained(
             "distilbert-base-uncased", FlotaMode.FLOTA, k=3, prefix_vocab=vocab
         )
 
@@ -102,7 +102,7 @@ def test_unsupported_pretrained_model_raises_error(model: str) -> None:
     expected_error_msg = f"Could not load tokenizer from pretrained model '{model}'"
 
     with pytest.raises(PretrainedTokenizerLoadError, match=expected_error_msg):
-        FlotaTokenizer.from_pretrained(model, FlotaMode.FLOTA)
+        AutoFlotaTokenizer.from_pretrained(model, FlotaMode.FLOTA)
 
 
 @pytest.mark.parametrize("model", ["xlm-mlm-en-2048", "ctrl", "unknown-model-name"])
@@ -111,12 +111,12 @@ def test_unsupported_model_name_raises_error(model: str) -> None:
     expected_error_msg = f"Model '{model}' is not supported by FlotaTokenizer"
 
     with pytest.raises(UnsupportedModelError, match=expected_error_msg):
-        FlotaTokenizer.from_pretrained(model, FlotaMode.FLOTA)
+        AutoFlotaTokenizer.from_pretrained(model, FlotaMode.FLOTA)
 
 
 def test_longest_sort_order() -> None:
     """Special test for FLOTA 'longest' mode to ensure sort order."""
-    flota_tokenizer = FlotaTokenizer.from_pretrained(
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
         "bert-base-uncased", FlotaMode.LONGEST, k=4
     )
     assert flota_tokenizer.tokenize("ws1s") == ["w", "##s", "##1", "##s"]
@@ -137,5 +137,5 @@ def test_flota_tokenizer_gpt2_includes_hyphen(
     This case has been found during regression tests with the full
     dataset (arxiv_cs_1e+03), based on the original implementation.
     """
-    flota_tokenizer = FlotaTokenizer.from_pretrained("gpt2", FlotaMode.FLOTA, k=4)
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained("gpt2", FlotaMode.FLOTA, k=4)
     assert flota_tokenizer.tokenize(input_word) == expected
