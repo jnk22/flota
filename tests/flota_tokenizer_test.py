@@ -75,6 +75,115 @@ def test_flota_dp_words() -> None:
     assert actual == expected
 
 
+@pytest.mark.parametrize(
+    ("word", "k", "prefixes", "expected"),
+    [
+        ("simplify", 1, ["sim"], ["sim", "##plify"]),
+        ("undesirable", 1, ["un"], ["un", "desirable"]),
+        ("unbelievable", 1, ["de", "un"], ["unbelievable"]),  # exists in model's vocab
+        ("deescalation", 1, ["de", "un"], ["de", "##lation"]),
+        ("deescalation", 3, ["de", "un"], ["de", "##es", "##ca", "##lation"]),
+    ],
+)
+def test_prefixes_used(
+    word: str, k: int, prefixes: list[str], expected: list[str]
+) -> None:
+    """Ensure that prefixes are used."""
+    tokenizer = AutoFlotaTokenizer.from_pretrained(
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, prefix_vocab=prefixes
+    )
+
+    assert tokenizer.tokenize(word) == expected
+
+
+@pytest.mark.parametrize(
+    ("word", "k", "suffixes", "expected"),
+    [
+        ("simplify", 1, ["plify"], ["sim", "##plify"]),
+        ("simplify", 1, ["ify"], ["sim", "##ify"]),
+        ("undesirable", 1, ["able"], ["und", "##able"]),
+        ("visualization", 1, ["zation"], ["visual", "##zation"]),
+        ("undesirable", 3, ["able"], ["und", "##e", "##sir", "##able"]),
+    ],
+)
+def test_suffixes_used(
+    word: str, k: int, suffixes: list[str], expected: list[str]
+) -> None:
+    """Ensure that suffixes are used."""
+    tokenizer = AutoFlotaTokenizer.from_pretrained(
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, suffix_vocab=suffixes
+    )
+
+    assert tokenizer.tokenize(word) == expected
+
+
+@pytest.mark.parametrize(
+    ("word", "k", "prefixes", "suffixes"),
+    [
+        ("unbelievable", 3, ["de"], ["able"]),
+        ("desirable", 3, ["de", "un"], ["able"]),
+        ("company", 2, [], ["y"]),
+    ],
+)
+def test_affixes_skipped(
+    word: str, k: int, prefixes: list[str], suffixes: list[str]
+) -> None:
+    """Tested words are already present in model's vocab.
+
+    Usually, affixes are cut before tokenizing the rest of the word.
+    However, if the word is already present in the model's vocab,
+    the tokenizer will not cut the affixes and return the full word
+    instead.
+    """
+    tokenizer = AutoFlotaTokenizer.from_pretrained(
+        "distilbert-base-uncased",
+        FlotaMode.FLOTA,
+        k=k,
+        prefix_vocab=prefixes,
+        suffix_vocab=suffixes,
+    )
+
+    assert tokenizer.tokenize(word) == [word]
+
+
+@pytest.mark.parametrize(
+    ("word", "k", "prefixes", "expected"),
+    [
+        ("simplify", 1, ["un", "de"], ["##plify"]),
+        ("undesirable", 1, ["sim"], ["desirable"]),
+        ("deescalation", 2, ["non"], ["dee", "##lation"]),
+    ],
+)
+def test_prefixes_not_found_in_word(
+    word: str, k: int, prefixes: list[str], expected: list[str]
+) -> None:
+    """Ensure that prefixes are skipped when not present in input word."""
+    tokenizer = AutoFlotaTokenizer.from_pretrained(
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, prefix_vocab=prefixes
+    )
+
+    assert tokenizer.tokenize(word) == expected
+
+
+@pytest.mark.parametrize(
+    ("word", "k", "suffixes", "expected"),
+    [
+        ("simplify", 1, ["able", "zation"], ["##plify"]),
+        ("undesirable", 1, ["ly"], ["desirable"]),
+        ("deescalation", 2, ["ify"], ["dee", "##lation"]),
+    ],
+)
+def test_suffixes_not_found_in_word(
+    word: str, k: int, suffixes: list[str], expected: list[str]
+) -> None:
+    """Ensure that suffixes are skipped when not present in input word."""
+    tokenizer = AutoFlotaTokenizer.from_pretrained(
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, suffix_vocab=suffixes
+    )
+
+    assert tokenizer.tokenize(word) == expected
+
+
 def test_prefix_vocab_order() -> None:
     """Ensure that word order in prefix vocab does not matter."""
     prefix_vocab = ["anti", "a"]
@@ -83,7 +192,7 @@ def test_prefix_vocab_order() -> None:
     # Assume that prefix 'anti' will be split as prefix regardless of
     # input order of prefix_vocab.
     # If the order of prefixes in prefix_vocab matters, then the output
-    # would start with ["a", ...], ignoring 'anti'.
+    # would start with ["a", ...], ignoring the larger prefix 'anti'.
     expected = ["anti", "##pas", "##ti"]
 
     for vocab in [prefix_vocab, prefix_vocab_reversed]:
@@ -92,6 +201,27 @@ def test_prefix_vocab_order() -> None:
         )
 
         actual = tokenizer.tokenize("antipasti")
+
+        assert actual == expected
+
+
+def test_suffix_vocab_order() -> None:
+    """Ensure that word order in suffix vocab does not matter."""
+    suffix_vocab = ["plify", "fy"]
+    suffix_vocab_reversed = ["fy", "plify"]
+
+    # Assume that suffix '##plify' will be split as suffix regardless of
+    # input order of suffix_vocab.
+    # If the order of suffixes in suffix_vocab matters, then the output
+    # would end with [..., "y"], ignoring the larger suffix 'plify'.
+    expected = ["sim", "##plify"]
+
+    for vocab in [suffix_vocab, suffix_vocab_reversed]:
+        tokenizer = AutoFlotaTokenizer.from_pretrained(
+            "distilbert-base-uncased", FlotaMode.FLOTA, k=2, suffix_vocab=vocab
+        )
+
+        actual = tokenizer.tokenize("simplify")
 
         assert actual == expected
 

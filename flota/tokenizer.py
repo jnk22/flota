@@ -317,7 +317,7 @@ class FlotaTokenizer(ABC):
         # Split provided word into suffix and stem if possible.
         with contextlib.suppress(StopIteration):
             suffix = next(sx for sx in self.__suffix_vocab if word.endswith(sx))
-            return suffix, word[: -len(suffix)]
+            return f"{self._special_token}{suffix}", word[: -len(suffix)]
 
         return None, word
 
@@ -392,19 +392,18 @@ class FlotaTokenizer(ABC):
 
     def __build_prefix_vocab(self, prefix_vocab: Iterable[str]) -> tuple[str, ...]:
         # Build prefix vocabulary for the model, sorted by length in descending order.
-        return self.__filter_sort_affixes(
-            chain.from_iterable({(px.title(), px.lower()) for px in prefix_vocab})
+        prefixes = chain.from_iterable(
+            {(px.title(), px.lower()) for px in prefix_vocab}
         )
+        filtered = (word for word in prefixes if word in self._vocab)
+        return tuple(sorted(filtered, key=len, reverse=True))
 
     def __build_suffix_vocab(self, suffix_vocab: Iterable[str]) -> tuple[str, ...]:
         # Build suffix vocabulary for the model, sorted by length in descending order.
-        return self.__filter_sort_affixes(
-            {f"{self._special_token}{sx.lower()}" for sx in suffix_vocab}
+        special = self._special_token
+        filtered = (
+            word for word in suffix_vocab if f"{special}{word.lower()}" in self._vocab
         )
-
-    def __filter_sort_affixes(self, affix_vocab: Iterable[str]) -> tuple[str, ...]:
-        # Return a tuple of sorted affixes that are in the vocabulary.
-        filtered = (word for word in affix_vocab if word in self._vocab)
         return tuple(sorted(filtered, key=len, reverse=True))
 
 
