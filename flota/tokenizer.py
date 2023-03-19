@@ -44,8 +44,8 @@ class FlotaTokenizer(ABC):
         *,
         k: int | None = None,
         cache_size: int | None = 128,
-        prefix_vocab: Iterable[str] | None = None,
-        suffix_vocab: Iterable[str] | None = None,
+        prefixes: Iterable[str] | None = None,
+        suffixes: Iterable[str] | None = None,
         **_: Any,  # noqa: ANN401
     ) -> None:
         """Initialize a FlotaTokenizer class instance.
@@ -61,9 +61,9 @@ class FlotaTokenizer(ABC):
         cache_size
             Use cache for tokenization, by default 128. Set to None for
             unlimited cache size, 0 to disable.
-        prefix_vocab
+        prefixes
             Prefix vocabulary to use for the model.
-        suffix_vocab
+        suffixes
             Suffix vocabulary to use for the model.
 
         Returns
@@ -76,11 +76,11 @@ class FlotaTokenizer(ABC):
         self.__mode: FlotaMode = mode
         self.__k: int | None = k if k and k > 0 else None
 
-        self.__prefix_vocab: tuple[str, ...] = (
-            self.__build_prefix_vocab(prefix_vocab) if prefix_vocab else ()
+        self.__prefixes: tuple[str, ...] = (
+            self.__build_prefixes(prefixes) if prefixes else ()
         )
-        self.__suffix_vocab: tuple[str, ...] = (
-            self.__build_suffix_vocab(suffix_vocab) if suffix_vocab else ()
+        self.__suffixes: tuple[str, ...] = (
+            self.__build_suffixes(suffixes) if suffixes else ()
         )
 
         # Wrap tokenize function with built-in cache.
@@ -262,12 +262,8 @@ class FlotaTokenizer(ABC):
         if token:
             return [token]
 
-        prefix, word = (
-            self.__split_prefix(word) if self.__prefix_vocab else (None, word)
-        )
-        suffix, word = (
-            self.__split_suffix(word) if self.__suffix_vocab else (None, word)
-        )
+        prefix, word = self.__split_prefix(word) if self.__prefixes else (None, word)
+        suffix, word = self.__split_suffix(word) if self.__suffixes else (None, word)
         tokens = self.__tokenize_methods[self.__mode](word, start=not prefix)
 
         return [token for token in (prefix, *tokens, suffix) if token]
@@ -308,7 +304,7 @@ class FlotaTokenizer(ABC):
     def __split_prefix(self, word: str) -> tuple[str | None, str]:
         # Split provided word into prefix and stem if possible.
         with contextlib.suppress(StopIteration):
-            prefix = next(px for px in self.__prefix_vocab if word.startswith(px))
+            prefix = next(px for px in self.__prefixes if word.startswith(px))
             return prefix, f"{self._special_token}{word[len(prefix):]}"
 
         return None, word
@@ -316,7 +312,7 @@ class FlotaTokenizer(ABC):
     def __split_suffix(self, word: str) -> tuple[str | None, str]:
         # Split provided word into suffix and stem if possible.
         with contextlib.suppress(StopIteration):
-            suffix = next(sx for sx in self.__suffix_vocab if word.endswith(sx))
+            suffix = next(sx for sx in self.__suffixes if word.endswith(sx))
             return f"{self._special_token}{suffix}", word[: -len(suffix)]
 
         return None, word
@@ -356,8 +352,6 @@ class FlotaTokenizer(ABC):
 
     def __build_dynamic(self, word: str, index: int = 0, *, start: bool) -> DPContainer:
         # Dynamic programming method for FLOTA tokenization.
-        # Base case. For unlimited 'k', this will only be reached if
-        # word is empty.
         if not word:
             return DPContainer()
 
@@ -390,19 +384,17 @@ class FlotaTokenizer(ABC):
             (None, False),
         )
 
-    def __build_prefix_vocab(self, prefix_vocab: Iterable[str]) -> tuple[str, ...]:
+    def __build_prefixes(self, prefixes: Iterable[str]) -> tuple[str, ...]:
         # Build prefix vocabulary for the model, sorted by length in descending order.
-        prefixes = chain.from_iterable(
-            {(px.title(), px.lower()) for px in prefix_vocab}
-        )
+        prefixes = chain.from_iterable({(px.title(), px.lower()) for px in prefixes})
         filtered = (word for word in prefixes if word in self._vocab)
         return tuple(sorted(filtered, key=len, reverse=True))
 
-    def __build_suffix_vocab(self, suffix_vocab: Iterable[str]) -> tuple[str, ...]:
+    def __build_suffixes(self, suffixes: Iterable[str]) -> tuple[str, ...]:
         # Build suffix vocabulary for the model, sorted by length in descending order.
         special = self._special_token
         filtered = (
-            word for word in suffix_vocab if f"{special}{word.lower()}" in self._vocab
+            word for word in suffixes if f"{special}{word.lower()}" in self._vocab
         )
         return tuple(sorted(filtered, key=len, reverse=True))
 

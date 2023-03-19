@@ -75,6 +75,16 @@ def test_flota_dp_words() -> None:
     assert actual == expected
 
 
+@pytest.mark.parametrize("mode", FlotaMode)
+def test_empty_word(mode: FlotaMode) -> None:
+    """Test empty word."""
+    flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
+        "distilbert-base-uncased", mode
+    )
+
+    assert flota_tokenizer.tokenize("") == []
+
+
 @pytest.mark.parametrize(
     ("word", "k", "prefixes", "expected"),
     [
@@ -90,7 +100,7 @@ def test_prefixes_used(
 ) -> None:
     """Ensure that prefixes are used."""
     tokenizer = AutoFlotaTokenizer.from_pretrained(
-        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, prefix_vocab=prefixes
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, prefixes=prefixes
     )
 
     assert tokenizer.tokenize(word) == expected
@@ -111,7 +121,7 @@ def test_suffixes_used(
 ) -> None:
     """Ensure that suffixes are used."""
     tokenizer = AutoFlotaTokenizer.from_pretrained(
-        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, suffix_vocab=suffixes
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, suffixes=suffixes
     )
 
     assert tokenizer.tokenize(word) == expected
@@ -139,8 +149,8 @@ def test_affixes_skipped(
         "distilbert-base-uncased",
         FlotaMode.FLOTA,
         k=k,
-        prefix_vocab=prefixes,
-        suffix_vocab=suffixes,
+        prefixes=prefixes,
+        suffixes=suffixes,
     )
 
     assert tokenizer.tokenize(word) == [word]
@@ -159,7 +169,7 @@ def test_prefixes_not_found_in_word(
 ) -> None:
     """Ensure that prefixes are skipped when not present in input word."""
     tokenizer = AutoFlotaTokenizer.from_pretrained(
-        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, prefix_vocab=prefixes
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, prefixes=prefixes
     )
 
     assert tokenizer.tokenize(word) == expected
@@ -178,26 +188,26 @@ def test_suffixes_not_found_in_word(
 ) -> None:
     """Ensure that suffixes are skipped when not present in input word."""
     tokenizer = AutoFlotaTokenizer.from_pretrained(
-        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, suffix_vocab=suffixes
+        "distilbert-base-uncased", FlotaMode.FLOTA, k=k, suffixes=suffixes
     )
 
     assert tokenizer.tokenize(word) == expected
 
 
-def test_prefix_vocab_order() -> None:
+def test_prefixes_order() -> None:
     """Ensure that word order in prefix vocab does not matter."""
-    prefix_vocab = ["anti", "a"]
-    prefix_vocab_reversed = ["a", "anti"]
+    prefixes = ["anti", "a"]
+    prefixes_reversed = ["a", "anti"]
 
     # Assume that prefix 'anti' will be split as prefix regardless of
-    # input order of prefix_vocab.
-    # If the order of prefixes in prefix_vocab matters, then the output
+    # input order of prefixes.
+    # If the order of prefixes in prefixes matters, then the output
     # would start with ["a", ...], ignoring the larger prefix 'anti'.
     expected = ["anti", "##pas", "##ti"]
 
-    for vocab in [prefix_vocab, prefix_vocab_reversed]:
+    for vocab in [prefixes, prefixes_reversed]:
         tokenizer = AutoFlotaTokenizer.from_pretrained(
-            "distilbert-base-uncased", FlotaMode.FLOTA, k=3, prefix_vocab=vocab
+            "distilbert-base-uncased", FlotaMode.FLOTA, k=3, prefixes=vocab
         )
 
         actual = tokenizer.tokenize("antipasti")
@@ -205,20 +215,20 @@ def test_prefix_vocab_order() -> None:
         assert actual == expected
 
 
-def test_suffix_vocab_order() -> None:
+def test_suffixes_order() -> None:
     """Ensure that word order in suffix vocab does not matter."""
-    suffix_vocab = ["plify", "fy"]
-    suffix_vocab_reversed = ["fy", "plify"]
+    suffixes = ["plify", "fy"]
+    suffixes_reversed = ["fy", "plify"]
 
     # Assume that suffix '##plify' will be split as suffix regardless of
-    # input order of suffix_vocab.
-    # If the order of suffixes in suffix_vocab matters, then the output
+    # input order of suffixes.
+    # If the order of suffixes in suffixes matters, then the output
     # would end with [..., "y"], ignoring the larger suffix 'plify'.
     expected = ["sim", "##plify"]
 
-    for vocab in [suffix_vocab, suffix_vocab_reversed]:
+    for vocab in [suffixes, suffixes_reversed]:
         tokenizer = AutoFlotaTokenizer.from_pretrained(
-            "distilbert-base-uncased", FlotaMode.FLOTA, k=2, suffix_vocab=vocab
+            "distilbert-base-uncased", FlotaMode.FLOTA, k=2, suffixes=vocab
         )
 
         actual = tokenizer.tokenize("simplify")

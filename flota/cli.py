@@ -164,8 +164,8 @@ def run(  # noqa: PLR0915
             k=k,
             strict=strict,
             cache_size=cache_size,
-            prefix_vocab=read_vocab(prefix_vocab) if prefix_vocab else None,
-            suffix_vocab=read_vocab(suffix_vocab) if suffix_vocab else None,
+            prefixes=read_vocab(prefix_vocab) if prefix_vocab else None,
+            suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
         )
 
     train_noise = THETA * (noise == NoiseType.TRAIN)
@@ -254,8 +254,8 @@ def encode(
         model_name,
         mode,
         k=k,
-        prefix_vocab=read_vocab(prefix_vocab) if prefix_vocab else None,
-        suffix_vocab=read_vocab(suffix_vocab) if suffix_vocab else None,
+        prefixes=read_vocab(prefix_vocab) if prefix_vocab else None,
+        suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
         cache_size=cache_size,
         strict=strict,
     )
@@ -284,8 +284,8 @@ def tokenize(
         model_name,
         mode,
         k=k,
-        prefix_vocab=read_vocab(prefix_vocab) if prefix_vocab else None,
-        suffix_vocab=read_vocab(suffix_vocab) if suffix_vocab else None,
+        prefixes=read_vocab(prefix_vocab) if prefix_vocab else None,
+        suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
         cache_size=cache_size,
         strict=strict,
     )

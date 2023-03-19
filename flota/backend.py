@@ -39,8 +39,8 @@ class FlotaTokenizerInput(BaseModel):
 async def tokenize(
     word: str,
     flota_tokenizer_input: FlotaTokenizerInput = Depends(),
-    prefix_vocab: list[str] | None = Query(default=None),
-    suffix_vocab: list[str] | None = Query(default=None),
+    prefixes: list[str] | None = Query(default=None),
+    suffixes: list[str] | None = Query(default=None),
 ) -> list[str]:
     """Tokenize input word using FlotaTokenizer."""
     flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
@@ -48,8 +48,8 @@ async def tokenize(
         flota_tokenizer_input.mode,
         k=flota_tokenizer_input.k,
         strict=flota_tokenizer_input.strict,
-        prefix_vocab=prefix_vocab,
-        suffix_vocab=suffix_vocab,
+        prefixes=prefixes,
+        suffixes=suffixes,
     )
     return flota_tokenizer.tokenize(word)
 
@@ -58,8 +58,8 @@ async def tokenize(
 async def encode(
     text: str,
     flota_tokenizer_input: FlotaTokenizerInput = Depends(),
-    prefix_vocab: list[str] | None = Query(default=None),
-    suffix_vocab: list[str] | None = Query(default=None),
+    prefixes: list[str] | None = Query(default=None),
+    suffixes: list[str] | None = Query(default=None),
 ) -> list[int]:
     """Encode input text using FlotaTokenizer."""
     flota_tokenizer = AutoFlotaTokenizer.from_pretrained(
@@ -67,7 +67,7 @@ async def encode(
         flota_tokenizer_input.mode,
         k=flota_tokenizer_input.k,
         strict=flota_tokenizer_input.strict,
-        prefix_vocab=prefix_vocab,
-        suffix_vocab=suffix_vocab,
+        prefixes=prefixes,
+        suffixes=suffixes,
     )
     return flota_tokenizer.encode(text)
