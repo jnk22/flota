@@ -117,8 +117,8 @@ def run(  # noqa: PLR0915
     filename += f"_{k or 0}" if k_supported else ""
     filename += "_prefix" if prefix_vocab else ""
     filename += "_suffix" if suffix_vocab else ""
+    filename += f"_noise_{noise.value}" if noise != NoiseType.NONE else ""
     filename += f"_seed-{random_seed}" if random_seed else ""
-    filename += noise.filename_extension
 
     results_file = Path(f"{output}/{filename}.txt")
     times_file = Path(f"{output}/{filename}_times.txt")

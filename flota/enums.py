@@ -37,11 +37,6 @@ class NoiseType(Enum):
     TEST = "test"
     TRAIN = "train"
 
-    @property
-    def filename_extension(self) -> str:
-        """The extension to add to a filename based on the noise type."""
-        return f"_noise_{self.value}" if self != NoiseType.NONE else ""
-
 
 class RunType(Enum):
     """An enum representing different run types."""
