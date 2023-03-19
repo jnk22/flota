@@ -48,7 +48,7 @@ fastapi = "^0.92.0"
 uvicorn = "^0.20.0"
 typer = "^0.7.0"
 black = "^23.1.0"
-ruff = "^0.0.252"
+ruff = "^0.0.256"
 vulture = "^2.7.0"
 mypy = "^1.1.1"
 
