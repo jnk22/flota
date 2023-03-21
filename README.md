@@ -18,9 +18,9 @@ effective method to improve the tokenization of pretrained language models.
 
 Additionally, this repository contains:
 
-- Code structure updates
+- Updated code structure
 - Alternative tokenization method, based on the original FLOTA idea
-- Additional passing of **prefix** and **suffix** vocabs to tokenizer
+- Additional passing of **prefixes** and **suffixes** to tokenizer
 - Simple HTTP API for tokenizing/encoding words
 - Improved CLI
 
@@ -51,26 +51,34 @@ This can be omitted if not required._
 
 ## Usage
 
-### CLI
+### Run model tests
 
 ```bash
-flota bert-base-uncased data/arxiv_cs_1e+02
+flota run bert-base-uncased data/arxiv_cs_1e+02
 ```
 
-### HTTP API
-
-The FLOTA API is a demo backend that serves an HTTP API for demo purposes.
+### Tokenize text
 
 ```bash
-flota-api --host 127.0.0.1 --port 8000
+flota tokenize bert-base-uncased this is an example text to be tokenized
+```
+
+### Encode text
+
+```bash
+flota encode bert-base-uncased this is an example text to be encoded
+```
+
+### Run HTTP server
+
+The FLOTA server is a demo backend that serves an HTTP API for demo purposes.
+
+```bash
+flota server --host 127.0.0.1 --port 8000
 ```
 
 Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) or
 [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc).
-
-### Predefined Scripts
-
-_TODO_
 
 ## Data
 
