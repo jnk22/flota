@@ -37,8 +37,8 @@ def run(  # noqa: PLR0915
     cache_size: int | None,
     random_seed: int | None,
     cuda_device: str,
-    prefix_vocab: Path | None,
-    suffix_vocab: Path | None,
+    prefixes: Path | None,
+    suffixes: Path | None,
     output: Path,
     noise: NoiseType,
     mode: TokenizeMode,
@@ -60,8 +60,8 @@ def run(  # noqa: PLR0915
 
     filename = f"{model_name}_{Path(dataset).stem}_{mode.value}"
     filename += f"_{k or 0}" if k_supported else ""
-    filename += "_prefix" if prefix_vocab else ""
-    filename += "_suffix" if suffix_vocab else ""
+    filename += "_prefix" if prefixes else ""
+    filename += "_suffix" if suffixes else ""
     filename += f"_noise_{noise.value}" if noise != NoiseType.NONE else ""
     filename += f"_seed-{random_seed}" if random_seed else ""
 
@@ -78,8 +78,8 @@ def run(  # noqa: PLR0915
     print(f"Number of classes: {num_labels}")
     print(f"Batch size: {batch_size:02d}")
     print(f"Random seed: {random_seed or 'n/a'}")
-    print(f"Prefix vocabulary: {prefix_vocab if mode != TokenizeMode.BASE else 'n/a'}")
-    print(f"Suffix vocabulary: {suffix_vocab if mode != TokenizeMode.BASE else 'n/a'}")
+    print(f"Prefix vocabulary: {prefixes if mode != TokenizeMode.BASE else 'n/a'}")
+    print(f"Suffix vocabulary: {suffixes if mode != TokenizeMode.BASE else 'n/a'}")
     print(f"Best F1 so far: {best_f1_dev} (dev), {best_f1_test} (test)")
 
     if results_file.exists():
@@ -109,8 +109,8 @@ def run(  # noqa: PLR0915
             k=k,
             strict=strict,
             cache_size=cache_size,
-            prefixes=read_vocab(prefix_vocab) if prefix_vocab else None,
-            suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
+            prefixes=read_vocab(prefixes) if prefixes else None,
+            suffixes=read_vocab(suffixes) if suffixes else None,
         )
 
     train_noise = theta * (noise == NoiseType.TRAIN)
@@ -185,8 +185,8 @@ def encode(
     *,
     k: int | None,
     cache_size: int | None,
-    prefix_vocab: Path | None,
-    suffix_vocab: Path | None,
+    prefixes: Path | None,
+    suffixes: Path | None,
     mode: FlotaMode,
     strict: bool,
 ) -> None:
@@ -198,8 +198,8 @@ def encode(
         model_name,
         mode,
         k=k,
-        prefixes=read_vocab(prefix_vocab) if prefix_vocab else None,
-        suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
+        prefixes=read_vocab(prefixes) if prefixes else None,
+        suffixes=read_vocab(suffixes) if suffixes else None,
         cache_size=cache_size,
         strict=strict,
     )
@@ -214,8 +214,8 @@ def tokenize(
     *,
     k: int | None,
     cache_size: int | None,
-    prefix_vocab: Path | None,
-    suffix_vocab: Path | None,
+    prefixes: Path | None,
+    suffixes: Path | None,
     mode: FlotaMode,
     strict: bool,
 ) -> None:
@@ -227,8 +227,8 @@ def tokenize(
         model_name,
         mode,
         k=k,
-        prefixes=read_vocab(prefix_vocab) if prefix_vocab else None,
-        suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
+        prefixes=read_vocab(prefixes) if prefixes else None,
+        suffixes=read_vocab(suffixes) if suffixes else None,
         cache_size=cache_size,
         strict=strict,
     )

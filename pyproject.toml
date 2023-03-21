@@ -98,4 +98,4 @@ convention = "numpy"
 "__main__.py" = ["D100"]
 "tests/*.py" = ["S101"]
 "cli.py" = ["T201", "B008"]
-"backend.py" = ["B008"]
+"server.py" = ["B008"]

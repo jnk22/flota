@@ -43,8 +43,8 @@ CLI_CACHE_SIZE = Option(
 )
 CLI_RANDOM_SEED = Option(None, help="Random seed")
 CLI_CUDA_DEVICE = Option("0", help="Selected CUDA device")
-CLI_PREFIX_VOCAB = Option(None, exists=True, help="Prefix vocabulary path")
-CLI_SUFFIX_VOCAB = Option(None, exists=True, help="Suffix vocabulary path")
+CLI_PREFIXES = Option(None, exists=True, help="Prefix vocabulary path")
+CLI_SUFFIXES = Option(None, exists=True, help="Suffix vocabulary path")
 CLI_OUTPUT = Option("results", help="Output directory for results")
 CLI_NOISE = Option(
     NoiseType.NONE.value, case_sensitive=False, help="Noise for input data"
@@ -77,8 +77,8 @@ def run(
     cache_size: IntOrNone = CLI_CACHE_SIZE,
     random_seed: IntOrNone = CLI_RANDOM_SEED,
     cuda_device: str = CLI_CUDA_DEVICE,
-    prefix_vocab: PathOrNone = CLI_PREFIX_VOCAB,
-    suffix_vocab: PathOrNone = CLI_SUFFIX_VOCAB,
+    prefixes: PathOrNone = CLI_PREFIXES,
+    suffixes: PathOrNone = CLI_SUFFIXES,
     output: Path = CLI_OUTPUT,
     noise: NoiseType = CLI_NOISE,
     mode: TokenizeMode = CLI_MODE,
@@ -99,8 +99,8 @@ def run(
         cache_size=cache_size,
         random_seed=random_seed,
         cuda_device=cuda_device,
-        prefix_vocab=prefix_vocab,
-        suffix_vocab=suffix_vocab,
+        prefixes=prefixes,
+        suffixes=suffixes,
         output=output,
         noise=noise,
         mode=mode,
@@ -116,8 +116,8 @@ def encode(
     *,
     k: IntOrNone = CLI_K,
     cache_size: IntOrNone = CLI_CACHE_SIZE,
-    prefix_vocab: PathOrNone = CLI_PREFIX_VOCAB,
-    suffix_vocab: PathOrNone = CLI_SUFFIX_VOCAB,
+    prefixes: PathOrNone = CLI_PREFIXES,
+    suffixes: PathOrNone = CLI_SUFFIXES,
     mode: FlotaMode = CLI_MODE,
     strict: bool = CLI_STRICT,
 ) -> None:
@@ -132,8 +132,8 @@ def encode(
         words,
         k=k,
         cache_size=cache_size,
-        prefix_vocab=prefix_vocab,
-        suffix_vocab=suffix_vocab,
+        prefixes=prefixes,
+        suffixes=suffixes,
         mode=mode,
         strict=strict,
     )
@@ -146,8 +146,8 @@ def tokenize(
     *,
     k: IntOrNone = CLI_K,
     cache_size: IntOrNone = CLI_CACHE_SIZE,
-    prefix_vocab: PathOrNone = CLI_PREFIX_VOCAB,
-    suffix_vocab: PathOrNone = CLI_SUFFIX_VOCAB,
+    prefixes: PathOrNone = CLI_PREFIXES,
+    suffixes: PathOrNone = CLI_SUFFIXES,
     mode: FlotaMode = CLI_MODE,
     strict: bool = CLI_STRICT,
 ) -> None:
@@ -162,8 +162,8 @@ def tokenize(
         words,
         k=k,
         cache_size=cache_size,
-        prefix_vocab=prefix_vocab,
-        suffix_vocab=suffix_vocab,
+        prefixes=prefixes,
+        suffixes=suffixes,
         mode=mode,
         strict=strict,
     )
