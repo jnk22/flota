@@ -8,6 +8,7 @@ demo purposes.
 """
 
 import fastapi
+import uvicorn
 from fastapi import Depends, Query
 from pydantic import BaseModel, Field
 
@@ -71,3 +72,8 @@ async def encode(
         suffixes=suffixes,
     )
     return flota_tokenizer.encode(text)
+
+
+def run(host: str, port: int) -> None:
+    """Run FLOTA API backend server."""
+    uvicorn.run(app, host=host, port=port)

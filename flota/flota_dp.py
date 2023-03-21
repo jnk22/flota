@@ -24,8 +24,7 @@ class DPItem:
         The index of this DPItem in the sequence of tokens.
     first_match
         A flag indicating whether the represented word is the first in a
-        checked sequence of words. If True, then the DPItem's score is
-        increased.
+        checked sequence of words.
 
     Attributes
     ----------
@@ -48,9 +47,9 @@ class DPItem:
         """Score tuple.
 
         The score consists of three elements:
-            1. length of word quadrupled
+            1. length of word squared
             2. first_match flag
-            3. index of the DPItem in the sequence of tokens.
+            3. index of the DPItem in the sequence of tokens
         """
         return len(self.word) ** 2, self.first_match, self.index
 

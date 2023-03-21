@@ -4,7 +4,7 @@ import re
 
 from typer.testing import CliRunner
 
-from flota.cli import cli
+from flota.main import cli
 
 runner = CliRunner()
 

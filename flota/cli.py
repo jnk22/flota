@@ -6,18 +6,13 @@ import random
 import sys
 from importlib import metadata
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 import pandas as pd
 import torch
-import typer
-import uvicorn
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
-from typer import Argument, Option
 
-from .backend import app
 from .enums import FlotaMode, NoiseType, ResultFileExistsMode, RunType, TokenizeMode
 from .tokenizer import AutoFlotaTokenizer
 from .utils import (
@@ -29,76 +24,26 @@ from .utils import (
     read_vocab,
 )
 
-IntOrNone = Optional[int]  # noqa: UP007
-PathOrNone = Optional[Path]  # noqa: UP007
-BoolOrNone = Optional[bool]  # noqa: UP007
 
-THETA = 0.3
-
-cli = typer.Typer()
-
-CLI_MODEL_NAME = Argument(..., help="Name of model")
-CLI_DATASET = Argument(
-    ..., help="CSV data file path without suffixes '[_train|_dev|_test].csv'"
-)
-CLI_WORDS_ENCODE = Argument(..., help="Words to encode")
-CLI_WORDS_TOKENIZE = Argument(..., help="Words to tokenize")
-CLI_LEARNING_RATE = Option(1e-5, min=1e-12, help="Learning rate")
-CLI_BATCH_SIZE = Option(64, min=1, help="Batch size")
-CLI_EPOCHS = Option(20, min=1, help="Number of epochs")
-CLI_K = Option(
-    None,
-    min=0,
-    help="Number of maximum subwords, excluding prefix/suffix (0/None=unlimited)",
-)
-CLI_CACHE_SIZE = Option(
-    default=None, help="FLOTA internal cache size (0=disable, None=unlimited)"
-)
-CLI_RANDOM_SEED = Option(None, help="Random seed")
-CLI_CUDA_DEVICE = Option("0", help="Selected CUDA device")
-CLI_PREFIX_VOCAB = Option(None, exists=True, help="Prefix vocabulary path")
-CLI_SUFFIX_VOCAB = Option(None, exists=True, help="Suffix vocabulary path")
-CLI_OUTPUT = Option("results", help="Output directory for results")
-CLI_NOISE = Option(
-    NoiseType.NONE.value, case_sensitive=False, help="Noise for input data"
-)
-CLI_MODE = Option(
-    TokenizeMode.FLOTA.value, case_sensitive=False, help="FLOTA mode or base"
-)
-CLI_RESULTS_EXIST = Option(
-    default=ResultFileExistsMode.APPEND.value,
-    help="Overwrite, append or skip if results file already exists",
-)
-CLI_STRICT = Option(default=False, help="Use strict mode for BERT model")
-
-
-def version_callback(*, value: bool) -> None:
-    """Print version and exit."""
-    if value:
-        version = metadata.version(__package__)
-        print(f"FLOTA CLI version: {version}")
-        raise typer.Exit
-
-
-@cli.command()
 def run(  # noqa: PLR0915
-    model_name: str = CLI_MODEL_NAME,
-    dataset: str = CLI_DATASET,
+    model_name: str,
+    dataset: str,
     *,
-    learning_rate: float = CLI_LEARNING_RATE,
-    batch_size: int = CLI_BATCH_SIZE,
-    epochs: int = CLI_EPOCHS,
-    k: IntOrNone = CLI_K,
-    cache_size: IntOrNone = CLI_CACHE_SIZE,
-    random_seed: IntOrNone = CLI_RANDOM_SEED,
-    cuda_device: str = CLI_CUDA_DEVICE,
-    prefix_vocab: PathOrNone = CLI_PREFIX_VOCAB,
-    suffix_vocab: PathOrNone = CLI_SUFFIX_VOCAB,
-    output: Path = CLI_OUTPUT,
-    noise: NoiseType = CLI_NOISE,
-    mode: TokenizeMode = CLI_MODE,
-    results_exist: ResultFileExistsMode = CLI_RESULTS_EXIST,
-    strict: bool = CLI_STRICT,
+    learning_rate: float,
+    theta: float,
+    batch_size: int,
+    epochs: int,
+    k: int | None,
+    cache_size: int | None,
+    random_seed: int | None,
+    cuda_device: str,
+    prefix_vocab: Path | None,
+    suffix_vocab: Path | None,
+    output: Path,
+    noise: NoiseType,
+    mode: TokenizeMode,
+    results_exist: ResultFileExistsMode,
+    strict: bool,
 ) -> None:
     """Run FLOTA tokenization."""
     if random_seed is not None:
@@ -168,8 +113,8 @@ def run(  # noqa: PLR0915
             suffixes=read_vocab(suffix_vocab) if suffix_vocab else None,
         )
 
-    train_noise = THETA * (noise == NoiseType.TRAIN)
-    test_noise = THETA * (noise in {NoiseType.TRAIN, NoiseType.TEST})
+    train_noise = theta * (noise == NoiseType.TRAIN)
+    test_noise = theta * (noise in {NoiseType.TRAIN, NoiseType.TEST})
 
     base_mode = mode == TokenizeMode.BASE
     train_collator = ClassificationCollator(tokenizer, train_noise, base=base_mode)
@@ -234,17 +179,16 @@ def run(  # noqa: PLR0915
     print(f"Done | Total duration: {timer.interval:.2f}s | Best scores: {scores_line}")
 
 
-@cli.command()
 def encode(
-    model_name: str = CLI_MODEL_NAME,
-    words: list[str] = CLI_WORDS_ENCODE,
+    model_name: str,
+    words: list[str],
     *,
-    k: IntOrNone = CLI_K,
-    cache_size: IntOrNone = CLI_CACHE_SIZE,
-    prefix_vocab: PathOrNone = CLI_PREFIX_VOCAB,
-    suffix_vocab: PathOrNone = CLI_SUFFIX_VOCAB,
-    mode: FlotaMode = CLI_MODE,
-    strict: bool = CLI_STRICT,
+    k: int | None,
+    cache_size: int | None,
+    prefix_vocab: Path | None,
+    suffix_vocab: Path | None,
+    mode: FlotaMode,
+    strict: bool,
 ) -> None:
     """Encode input words.
 
@@ -264,17 +208,16 @@ def encode(
         print(*tokenizer.encode(word))
 
 
-@cli.command()
 def tokenize(
-    model_name: str = CLI_MODEL_NAME,
-    words: list[str] = CLI_WORDS_TOKENIZE,
+    model_name: str,
+    words: list[str],
     *,
-    k: IntOrNone = CLI_K,
-    cache_size: IntOrNone = CLI_CACHE_SIZE,
-    prefix_vocab: PathOrNone = CLI_PREFIX_VOCAB,
-    suffix_vocab: PathOrNone = CLI_SUFFIX_VOCAB,
-    mode: FlotaMode = CLI_MODE,
-    strict: bool = CLI_STRICT,
+    k: int | None,
+    cache_size: int | None,
+    prefix_vocab: Path | None,
+    suffix_vocab: Path | None,
+    mode: FlotaMode,
+    strict: bool,
 ) -> None:
     """Tokenize input words.
 
@@ -294,19 +237,6 @@ def tokenize(
         print(*tokenizer.tokenize(word))
 
 
-@cli.command()
-def server(
-    host: str = typer.Option("127.0.0.1", help="Listen host."),
-    port: int = typer.Option(8000, help="Listen port."),
-) -> None:
-    """Run FLOTA API backend server."""
-    uvicorn.run(app, host=host, port=port)
-
-
-@cli.callback()
-def callback(
-    version: BoolOrNone = typer.Option(  # noqa: ARG001
-        None, "--version", callback=version_callback, is_eager=True
-    ),
-) -> None:
-    """Run application to print version."""
+def print_version() -> None:
+    """Print version and exit."""
+    print(f"FLOTA CLI version: {metadata.version(__package__)}")
