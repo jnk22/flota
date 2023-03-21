@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flota"
-version = "0.0.6"
+version = "0.0.7"
 description = ""
 authors = ["Valentin Hofmann"]
 maintainers = [
