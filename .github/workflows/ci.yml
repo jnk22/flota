@@ -1,5 +1,5 @@
 ---
-name: Lint & Test
+name: CI
 
 on:
   pull_request:
