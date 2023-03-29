@@ -17,7 +17,7 @@ from .exceptions import PretrainedTokenizerLoadError, UnsupportedModelError
 from .flota_dp import DPContainer, DPItem
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
+    from collections.abc import Iterable
     from typing import Any
 
     from tokenizers import Tokenizer
@@ -94,13 +94,6 @@ class FlotaTokenizer(ABC):
         self.__build_dynamic = functools.cache(  # type: ignore[assignment]
             self.__build_dynamic
         )
-
-        self.__tokenize_methods: dict[FlotaMode, Callable] = {
-            FlotaMode.FLOTA: self._tokenize_flota,
-            FlotaMode.FLOTA_DP: self._tokenize_flota_dp,
-            FlotaMode.FIRST: self._tokenize_first,
-            FlotaMode.LONGEST: self._tokenize_longest,
-        }
 
     @property
     def cache_info(self) -> CacheInfo:
@@ -264,7 +257,7 @@ class FlotaTokenizer(ABC):
 
         prefix, word = self.__split_prefix(word) if self.__prefixes else (None, word)
         suffix, word = self.__split_suffix(word) if self.__suffixes else (None, word)
-        tokens = self.__tokenize_methods[self.__mode](word, start=not prefix)
+        tokens = self.__tokenize_method(word, start=not prefix)
 
         return [token for token in (prefix, *tokens, suffix) if token]
 
@@ -316,6 +309,20 @@ class FlotaTokenizer(ABC):
             return f"{self._special_token}{suffix}", word[: -len(suffix)]
 
         return None, word
+
+    def __tokenize_method(self, word: str, **kwargs: bool) -> list[str]:
+        # Tokenize based on the tokenizer's mode.
+        match self.__mode:
+            case FlotaMode.FLOTA:
+                return self._tokenize_flota(word, **kwargs)
+            case FlotaMode.FLOTA_DP:
+                return self._tokenize_flota_dp(word, **kwargs)
+            case FlotaMode.FIRST:
+                return self._tokenize_first(word, **kwargs)
+            case FlotaMode.LONGEST:
+                return self._tokenize_longest(word, **kwargs)
+            case _:
+                return NotImplemented
 
     def __build_flota_dict(
         self, word: str, recursive_k: int | None, *, start: bool
