@@ -1,7 +1,5 @@
 """Module for running FLOTA tokenization."""
 
-from __future__ import annotations
-
 import random
 import sys
 from importlib import metadata

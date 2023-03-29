@@ -1,7 +1,7 @@
 """Tests for FLOTA module for generated test files."""
 
 import json
-from pathlib import Path  # noqa: TCH003
+from pathlib import Path
 
 import pytest
 

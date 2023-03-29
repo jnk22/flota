@@ -13,7 +13,7 @@ from flota import AutoFlotaTokenizer, FlotaMode, FlotaTokenizer
 class FunctionType(Enum):
     """Enum for tested function type, used for file paths."""
 
-    TOKENIZE = "tokenize"  # noqa: S105
+    TOKENIZE = "tokenize"
     ENCODE = "encode"
     CALL = "call"
 

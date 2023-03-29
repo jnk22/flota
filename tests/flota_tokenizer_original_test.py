@@ -1,8 +1,10 @@
 """Tests for FLOTA module based on original implementation."""
 
+from __future__ import annotations
+
 import functools
 import json
-from pathlib import Path  # noqa: TCH003
+from typing import TYPE_CHECKING
 
 import pytest
 import torch
@@ -10,6 +12,10 @@ import torch
 from flota import FlotaMode, FlotaTokenizer
 
 from .utils.file_based_test import FileBasedTest, FunctionType
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 TEST_MODELS_NOT_STRICT = [
     "bert-base-cased",

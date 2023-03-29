@@ -1,7 +1,5 @@
 """Module for running FLOTA tokenization."""
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Optional
 
@@ -9,9 +7,9 @@ from typer import Argument, Exit, Option, Typer
 
 from .enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
 
-IntOrNone = Optional[int]  # noqa: UP007
-PathOrNone = Optional[Path]  # noqa: UP007
-BoolOrNone = Optional[bool]  # noqa: UP007
+IntOrNone = Optional[int]
+PathOrNone = Optional[Path]
+BoolOrNone = Optional[bool]
 
 
 def version_callback(*, value: bool) -> None:
