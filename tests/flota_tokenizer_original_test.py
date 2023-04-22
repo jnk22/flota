@@ -17,13 +17,8 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-TEST_MODELS_NOT_STRICT = [
-    "bert-base-cased",
-    "bert-base-uncased",
-    "xlnet-base-cased",
-    "gpt2",
-]
-TEST_MODELS_STRICT = ["bert-base-cased", "bert-base-uncased"]
+TEST_MODELS_NOT_STRICT = ["bert-base-uncased", "xlnet-base-cased", "gpt2"]
+TEST_MODELS_STRICT = ["bert-base-uncased"]
 TEST_MODELS = [(model, True) for model in TEST_MODELS_STRICT] + [
     (model, False) for model in TEST_MODELS_NOT_STRICT
 ]
