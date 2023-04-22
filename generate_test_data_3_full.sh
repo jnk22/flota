@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for model in bert-base-cased bert-base-uncased gpt2 xlnet-base-cased; do
+for model in bert-base-uncased gpt2 xlnet-base-cased; do
   for mode in flota first longest; do
     for k in 1 2 3 4; do
       for data in arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
@@ -16,7 +16,7 @@ for model in bert-base-cased bert-base-uncased gpt2 xlnet-base-cased; do
   done
 done
 
-for model in bert-base-cased bert-base-uncased; do
+for model in bert-base-uncased; do
   for mode in flota first longest; do
     for k in 1 2 3 4; do
       for data in arxiv_cs_1e+03 arxiv_maths_1e+03 arxiv_physics_1e+03; do
