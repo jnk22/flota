@@ -43,6 +43,7 @@ class FlotaTokenizer(ABC):
         mode: FlotaMode,
         *,
         k: int | None = None,
+        strict: bool = False,
         cache_size: int | None = 128,
         prefixes: Iterable[str] | None = None,
         suffixes: Iterable[str] | None = None,
@@ -58,6 +59,8 @@ class FlotaTokenizer(ABC):
             The mode to use for the model.
         k
             The number of clusters to use for the model, by default 3.
+        strict
+            Use strict mode for tokenization.
         cache_size
             Use cache for tokenization, by default 128. Set to None for
             unlimited cache size, 0 to disable.
@@ -75,6 +78,7 @@ class FlotaTokenizer(ABC):
         self.__vocab_max_len: int = max(len(word) for word in self._vocab)
         self.__mode: FlotaMode = mode
         self.__k: int | None = k if k and k > 0 else None
+        self.__strict: bool = strict
 
         self.__prefixes: tuple[str, ...] = (
             self.__build_prefixes(prefixes) if prefixes else ()
@@ -135,9 +139,13 @@ class FlotaTokenizer(ABC):
         """Return the special token used by the tokenizer."""
 
     def _word_combinations(
-        self, word: str, *, start: bool, **_: bool
+        self, word: str, *, start: bool, default_vocab: bool
     ) -> tuple[str, ...]:
         # Return word combinations in order including special token.
+        # If strict mode is enabled, only return the word itself.
+        if self.__strict and not default_vocab and start:
+            return (word,)
+
         combined = self._special_token + word
         return (combined, word) if start else (word, combined)
 
@@ -409,33 +417,6 @@ class FlotaTokenizer(ABC):
 class BertFlotaTokenizer(FlotaTokenizer):
     """FLOTA tokenizer for BERT models."""
 
-    def __init__(
-        self,
-        tokenizer: Tokenizer,
-        mode: FlotaMode,
-        *,
-        k: int | None = None,
-        strict: bool = False,
-        **kwargs: Any,  # noqa: ANN401
-    ) -> None:
-        """Extend the base tokenizer with strict flag.
-
-        Parameters
-        ----------
-        tokenizer
-            The underlying tokenizer to be used for tokenization.
-        mode
-            The mode of tokenization as supported by base class.
-        k
-            The amount of maximum subwords to retrieve during tokenization.
-        strict
-            Use strict mode for tokenization.
-        **kwargs
-            Additional keyword arguments to be passed to the base class.
-        """
-        super().__init__(tokenizer, mode, k=k, **kwargs)
-        self.__strict: bool = strict
-
     @property
     def _special_token(self) -> str:
         return self._tok.decoder.prefix
@@ -448,20 +429,9 @@ class BertFlotaTokenizer(FlotaTokenizer):
     def _post_encode_token_ids(self) -> tuple[int, ...]:
         return (self._tok.sep_token_id,)
 
-    def _word_combinations(
-        self,
-        word: str,
-        *,
-        start: bool,
-        **kwargs: bool,
-    ) -> tuple[str, ...]:
-        # Special case for BERT models:
-        # In strict mode, only use subword for word starts.
-        if self.__strict and not kwargs.pop("default_vocab") and start:
-            return (word,)
-
-        # Otherwise, use reversed default.
-        return tuple(reversed(super()._word_combinations(word, start=start)))
+    def _word_combinations(self, word: str, **kwargs: bool) -> tuple[str, ...]:
+        # Special case for BERT models: Use reversed default.
+        return tuple(reversed(super()._word_combinations(word, **kwargs)))
 
     @staticmethod
     def _tensor_text_input_index(text: list[int]) -> slice:

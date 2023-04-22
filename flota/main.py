@@ -54,7 +54,7 @@ CLI_RESULTS_EXIST = Option(
     default=ResultFileExistsMode.APPEND.value,
     help="Overwrite, append or skip if results file already exists",
 )
-CLI_STRICT = Option(default=False, help="Use strict mode for BERT model")
+CLI_STRICT = Option(default=False, help="Use strict mode")
 CLI_HOST = Option("127.0.0.1", help="Listen host.")
 CLI_PORT = Option(8000, help="Listen port.")
 CLI_VERSION = Option(None, "--version", callback=version_callback, is_eager=True)
