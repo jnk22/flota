@@ -37,7 +37,7 @@ class FlotaTokenizer(ABC):
 
     __SPECIAL = "-"
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         tokenizer: Tokenizer,
         mode: FlotaMode,
@@ -471,7 +471,7 @@ class GPT2FlotaTokenizer(FlotaTokenizer):
 class AutoFlotaTokenizer:
     """Class for creating model specific `FlotaTokenizer`."""
 
-    __MAPPING = {
+    __MAPPING: dict[str, type[FlotaTokenizer]] = {
         "bert": BertFlotaTokenizer,
         "xlnet": XLNetFlotaTokenizer,
         "gpt2": GPT2FlotaTokenizer,
@@ -536,4 +536,6 @@ class AutoFlotaTokenizer:
             raise PretrainedTokenizerLoadError(err_msg) from exc
 
         else:
-            return flota_tokenizer_class(pretrained_tokenizer, mode, k=k, **kwargs)
+            return flota_tokenizer_class(
+                pretrained_tokenizer, mode, k=k, **kwargs  # type: ignore[arg-type]
+            )

@@ -50,7 +50,7 @@ typer = "^0.7.0"
 black = "^23.3.0"
 ruff = "^0.0.260"
 vulture = "^2.7.0"
-mypy = "^1.1.1"
+mypy = "^1.2.0"
 
 [tool.poetry.scripts]
 flota = "flota.main:cli"

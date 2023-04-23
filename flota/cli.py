@@ -23,7 +23,7 @@ from .utils import (
 )
 
 
-def run(  # noqa: PLR0915
+def run(  # noqa: PLR0913, PLR0915
     model_name: str,
     dataset: str,
     *,
@@ -177,7 +177,7 @@ def run(  # noqa: PLR0915
     print(f"Done | Total duration: {timer.interval:.2f}s | Best scores: {scores_line}")
 
 
-def encode(
+def encode(  # noqa: PLR0913
     model_name: str,
     words: list[str],
     *,
@@ -206,7 +206,7 @@ def encode(
         print(*tokenizer.encode(word))
 
 
-def tokenize(
+def tokenize(  # noqa: PLR0913
     model_name: str,
     words: list[str],
     *,

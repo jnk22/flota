@@ -63,7 +63,7 @@ cli = Typer()
 
 
 @cli.command()
-def run(
+def run(  # noqa: PLR0913
     model_name: str = CLI_MODEL_NAME,
     dataset: str = CLI_DATASET,
     *,
@@ -108,7 +108,7 @@ def run(
 
 
 @cli.command()
-def encode(
+def encode(  # noqa: PLR0913
     model_name: str = CLI_MODEL_NAME,
     words: list[str] = CLI_WORDS_ENCODE,
     *,
@@ -138,7 +138,7 @@ def encode(
 
 
 @cli.command()
-def tokenize(
+def tokenize(  # noqa: PLR0913
     model_name: str = CLI_MODEL_NAME,
     words: list[str] = CLI_WORDS_TOKENIZE,
     *,
