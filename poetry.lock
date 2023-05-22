@@ -709,6 +709,32 @@ xlsx2csv = ["xlsx2csv (>=0.8.0)"]
 xlsxwriter = ["xlsxwriter"]
 
 [[package]]
+name = "polars-lts-cpu"
+version = "0.17.14"
+description = "Blazingly fast DataFrame library"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "polars_lts_cpu-0.17.14-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:66263522e2c9a810b3cbd4eb31cff71a18adfa1eca607fe872e2e65d3b03cb16"},
+    {file = "polars_lts_cpu-0.17.14.tar.gz", hash = "sha256:0c01c5347d00523afc5856aced849bb11694953c7587e2f5231720a1022c637d"},
+]
+
+[package.extras]
+all = ["polars[connectorx,deltalake,fsspec,matplotlib,numpy,pandas,pyarrow,sqlalchemy,timezone,xlsx2csv,xlsxwriter]"]
+connectorx = ["connectorx"]
+deltalake = ["deltalake (>=0.8.0)"]
+fsspec = ["fsspec"]
+matplotlib = ["matplotlib"]
+numpy = ["numpy (>=1.16.0)"]
+pandas = ["pandas", "pyarrow (>=7.0.0)"]
+pyarrow = ["pyarrow (>=7.0.0)"]
+sqlalchemy = ["pandas", "sqlalchemy"]
+timezone = ["backports.zoneinfo", "tzdata"]
+xlsx2csv = ["xlsx2csv (>=0.8.0)"]
+xlsxwriter = ["xlsxwriter"]
+
+[[package]]
 name = "pydantic"
 version = "1.10.7"
 description = "Data validation and settings management using python type hints"
@@ -1527,4 +1553,4 @@ backend = ["fastapi", "uvicorn"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "4809cc5a0e0d05b1b722c94183b0942560afc49a499ed7bc748cbaa86c55493f"
+content-hash = "a4308301b3c70d08d858fd597974865e7996b4823a4cf5eb735cc033441d8caf"

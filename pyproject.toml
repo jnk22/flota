@@ -52,6 +52,12 @@ ruff = "^0.0.260"
 vulture = "^2.7.0"
 mypy = "^1.2.0"
 
+[tool.poetry.group.lts]
+optional = true
+
+[tool.poetry.group.lts.dependencies]
+polars-lts-cpu = "^0.17.14"
+
 [tool.poetry.scripts]
 flota = "flota.main:cli"
 
