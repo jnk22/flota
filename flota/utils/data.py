@@ -43,9 +43,9 @@ class ClassificationDataset(Dataset):
 
     def __init__(self, data: DataFrame) -> None:
         """Initialize the dataset with the data."""
-        self.n_classes = len(set(data.label))
-        self.texts = list(data.text)
-        self.labels = list(data.label)
+        self.n_classes = len(set(data["label"]))
+        self.texts = list(data["text"])
+        self.labels = list(data["label"])
 
     def __len__(self) -> int:
         """Return the length of the dataset."""
