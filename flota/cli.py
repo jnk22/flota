@@ -6,7 +6,7 @@ from importlib import metadata
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
+import polars as pl
 import torch
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -50,7 +50,7 @@ def run(  # noqa: PLR0913, PLR0915
         torch.manual_seed(random_seed)
 
     datasets = {
-        run_type: ClassificationDataset(pd.read_csv(f"{dataset}_{run_type.value}.csv"))
+        run_type: ClassificationDataset(pl.read_csv(f"{dataset}_{run_type.value}.csv"))
         for run_type in RunType
     }
     num_labels = datasets[RunType.TRAIN].n_classes

@@ -15,7 +15,7 @@ packages = [{ include = "flota" }]
 python = "^3.10"
 transformers = "^4.26.0"
 torch = "^1.13.0"
-pandas = "^1.5.0"
+polars = "^0.17.14"
 numpy = "^1.24.0"
 scikit-learn = "^1.2.0"
 tqdm = "^4.64.0"
@@ -24,7 +24,7 @@ uvicorn = { version = "^0.20.0", optional = true }
 typer = { extras = ["all"], version = "^0.7.0" }
 
 [tool.poetry.extras]
-backend = ["typing", "fastapi", "uvicorn"]
+backend = ["fastapi", "uvicorn"]
 
 [tool.poetry.group.test]
 optional = true
@@ -68,6 +68,14 @@ exclude_lines = ["if (typing\\.)?TYPE_CHECKING:"]
 [tool.mypy]
 ignore_missing_imports = true
 
+[tool.pyright]
+include = ["flota"]
+exclude = ["**/__pycache__"]
+reportMissingImports = true
+reportMissingTypeStubs = false
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
+
 [tool.vulture]
 make_whitelist = true
 min_confidence = 100
@@ -84,10 +92,10 @@ ignore = [
   "COM812", # flake8-commas: trailing-comma-on-bare-tuple-prohibited
 ]
 unfixable = [
-  "T201", # flake8-print: print-found
+  "T201",   # flake8-print: print-found
   "ERA001", # eradicate: commented-out-code
-  "F401", # Pyflakes: unused-import
-  "F841", # Pyflakes: unused-variable
+  "F401",   # Pyflakes: unused-import
+  "F841",   # Pyflakes: unused-variable
 ]
 
 [tool.ruff.pydocstyle]

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from pathlib import Path
     from types import TracebackType
 
-    from pandas import DataFrame
+    from polars import DataFrame
 
 
 DEFAULT_RNG = np.random.default_rng()
