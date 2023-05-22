@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import functools
 import json
 from typing import TYPE_CHECKING
 
@@ -25,9 +24,6 @@ TEST_MODELS = [(model, True) for model in TEST_MODELS_STRICT] + [
 TEST_MODES = [FlotaMode.FLOTA, FlotaMode.FIRST, FlotaMode.LONGEST]
 TEST_K = range(1, 5)
 TEST_DATA = ["cs", "maths", "physics"]
-
-assert_equal_tensors = functools.partial(torch.testing.assert_close, rtol=0, atol=0)
-"""Custom `assert_equal` function for tensor comparisons. """
 
 
 @pytest.mark.parametrize("data", TEST_DATA)
@@ -104,7 +100,5 @@ class TestOriginalFiles(FileBasedTest):
 
         for actual_item, expected_item in zip(actual, expected, strict=True):
             assert actual_item.keys() == expected_item.keys()
-            assert_equal_tensors(actual_item["input_ids"], expected_item["input_ids"])
-            assert_equal_tensors(
-                actual_item["attention_mask"], expected_item["attention_mask"]
-            )
+            torch.equal(actual_item["input_ids"], expected_item["input_ids"])
+            torch.equal(actual_item["attention_mask"], expected_item["attention_mask"])
