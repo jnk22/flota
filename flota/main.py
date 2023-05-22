@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Optional
 
-from typer import Argument, Exit, Option, Typer
+from typer import Argument, Option, Typer
 
 from .enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
 
@@ -14,6 +14,8 @@ BoolOrNone = Optional[bool]
 
 def version_callback(*, value: bool) -> None:
     """Print version and exit."""
+    from typer import Exit
+
     if value:
         from .cli import print_version
 

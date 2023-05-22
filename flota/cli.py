@@ -1,26 +1,8 @@
 """Module for running FLOTA tokenization."""
 
-import random
-import sys
-from importlib import metadata
 from pathlib import Path
 
-import numpy as np
-import polars as pl
-import torch
-from torch.utils.data import DataLoader
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-
-from .enums import FlotaMode, NoiseType, ResultFileExistsMode, RunType, TokenizeMode
-from .tokenizer import AutoFlotaTokenizer
-from .utils import (
-    ClassificationCollator,
-    ClassificationDataset,
-    Timer,
-    TrainTestHelper,
-    get_best_scores,
-    read_vocab,
-)
+from .enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
 
 
 def run(  # noqa: PLR0913, PLR0915
@@ -44,6 +26,27 @@ def run(  # noqa: PLR0913, PLR0915
     strict: bool,
 ) -> None:
     """Run FLOTA tokenization."""
+    import random
+    import sys
+    from pathlib import Path
+
+    import numpy as np
+    import polars as pl
+    import torch
+    from torch.utils.data import DataLoader
+    from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+    from .enums import RunType
+    from .tokenizer import AutoFlotaTokenizer
+    from .utils import (
+        ClassificationCollator,
+        ClassificationDataset,
+        Timer,
+        TrainTestHelper,
+        get_best_scores,
+        read_vocab,
+    )
+
     if random_seed is not None:
         np.random.default_rng(random_seed)
         random.seed(random_seed)
@@ -192,6 +195,9 @@ def encode(  # noqa: PLR0913
 
     Output will be separated into a single line for each word.
     """
+    from .tokenizer import AutoFlotaTokenizer
+    from .utils import read_vocab
+
     tokenizer = AutoFlotaTokenizer.from_pretrained(
         model_name,
         mode,
@@ -221,6 +227,9 @@ def tokenize(  # noqa: PLR0913
 
     Output will be separated into a single line for each word.
     """
+    from .tokenizer import AutoFlotaTokenizer
+    from .utils import read_vocab
+
     tokenizer = AutoFlotaTokenizer.from_pretrained(
         model_name,
         mode,
@@ -237,4 +246,6 @@ def tokenize(  # noqa: PLR0913
 
 def print_version() -> None:
     """Print version and exit."""
+    from importlib import metadata
+
     print(f"FLOTA CLI version: {metadata.version(__package__)}")
