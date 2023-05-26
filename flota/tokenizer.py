@@ -247,16 +247,13 @@ class FlotaTokenizer(ABC):
         Examples
         --------
         >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=2)
-        >>> word = 'example'
-        >>> tokenizer.tokenize(word)
+        >>> tokenizer.tokenize('example')
         ['example']
 
-        >>> word = 'tokenization'
-        >>> tokenizer.tokenize(word)
+        >>> tokenizer.tokenize('tokenization')
         ['token', '##ization']
 
-        >>> word = 'mutagenic'
-        >>> tokenizer.tokenize(word)
+        >>> tokenizer.tokenize('mutagenic')
         ['##uta', '##genic']
         """  # noqa: E501
         token, _ = self.__word_in_vocab(word, default_vocab=True)
