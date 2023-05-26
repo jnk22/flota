@@ -7,7 +7,7 @@ from dataclasses import KW_ONLY, dataclass, field
 from itertools import chain
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class DPItem:
     """An item representing a token and its score.
 
@@ -55,7 +55,7 @@ class DPItem:
 
 
 @functools.total_ordering
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class DPContainer:
     """A container for dynamic programming items.
 
