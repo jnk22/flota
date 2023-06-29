@@ -48,9 +48,6 @@ fastapi = "^0.92.0"
 uvicorn = "^0.20.0"
 typer = "^0.7.0"
 black = "^23.3.0"
-ruff = "^0.0.260"
-vulture = "^2.7.0"
-mypy = "^1.2.0"
 
 [tool.poetry.group.lts]
 optional = true
