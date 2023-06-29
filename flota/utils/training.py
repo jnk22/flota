@@ -22,10 +22,9 @@ class TrainTestHelper:
     def __init__(
         self, model: PreTrainedModel, device: str, learning_rate: float
     ) -> None:
-        cuda_device = torch.device(
+        self.__device = torch.device(
             f"cuda:{device}" if torch.cuda.is_available() else "cpu"
         )
-        self.__device = cuda_device
         self.__model = model.to(self.__device)
         self.__optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 

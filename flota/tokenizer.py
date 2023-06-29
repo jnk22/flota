@@ -7,7 +7,7 @@ import functools
 import re
 from abc import ABC, abstractmethod
 from itertools import chain
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, Final, NamedTuple
 
 import torch
 from transformers import AutoTokenizer
@@ -35,7 +35,7 @@ class CacheInfo(NamedTuple):
 class FlotaTokenizer(ABC):
     """Abstract base class for FLOTA tokenization methods."""
 
-    __SPECIAL = "-"
+    __SPECIAL: Final[str] = "-"
 
     def __init__(  # noqa: PLR0913
         self,
@@ -58,7 +58,8 @@ class FlotaTokenizer(ABC):
         mode
             The mode to use for the model.
         k
-            The number of clusters to use for the model, by default 3.
+            The number of maximum subwords for tokenization.
+            Will be ignored for `FlotaMode.FLOTA_DP`.
         strict
             Use strict mode for tokenization.
         cache_size
@@ -378,7 +379,7 @@ class FlotaTokenizer(ABC):
         for sw_left, sw_right, i in split_words:
             dp_left = self.__build_dynamic(sw_left, index, start=True and start)
             dp_right = self.__build_dynamic(sw_right, index + i, start=False)
-            token_candidates.append(DPContainer.from_structs(dp_left, dp_right))
+            token_candidates.append(DPContainer.from_containers(dp_left, dp_right))
 
         # Reverse to keep longer parts of the beginning of the word.
         return max(reversed(token_candidates), default=DPContainer())
@@ -468,7 +469,7 @@ class GPT2FlotaTokenizer(FlotaTokenizer):
 class AutoFlotaTokenizer:
     """Class for creating model specific `FlotaTokenizer`."""
 
-    __MAPPING: dict[str, type[FlotaTokenizer]] = {
+    __MAPPING: Final[dict[str, type[FlotaTokenizer]]] = {
         "bert": BertFlotaTokenizer,
         "xlnet": XLNetFlotaTokenizer,
         "gpt2": GPT2FlotaTokenizer,

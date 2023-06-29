@@ -100,7 +100,7 @@ class DPContainer:
     items: set[DPItem] = field(default_factory=set)
 
     @classmethod
-    def from_structs(cls, *dp_structs: DPContainer) -> DPContainer:
+    def from_containers(cls, *dp_containers: DPContainer) -> DPContainer:
         """Create a new DPContainer from multiple DPContainers.
 
         This method creates a new DPContainer by combining DPContainers from
@@ -118,7 +118,7 @@ class DPContainer:
             A new DPContainer containing DPItems from all DPContainers passed as
             arguments.
         """
-        return cls(set(chain.from_iterable(dps.items for dps in dp_structs)))
+        return cls(set(chain.from_iterable(dp_c.items for dp_c in dp_containers)))
 
     def __eq__(self, other: object) -> bool:
         """Check if the current container's score equals another's score."""
