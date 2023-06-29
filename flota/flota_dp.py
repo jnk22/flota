@@ -90,7 +90,7 @@ class DPContainer:
 
     >>> dp_container1 = DPContainer({DPItem('vis', 'vis', 0, first_match=True), DPItem('##ua', 'ua', 3, first_match=True)})
     >>> dp_container2 = DPContainer({DPItem('##li', 'li', 5, first_match=True), DPItem('##zation', 'zation', 7, first_match=True)})
-    >>> dp_container = DPContainer.from_structs(dp_container1, dp_container2)
+    >>> dp_container = DPContainer.from_containers(dp_container1, dp_container2)
     >>> dp_container.score
     (53, 4, 15)
     >>> dp_container.tokens
