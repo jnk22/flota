@@ -2,22 +2,19 @@
 
 from __future__ import annotations
 
+import random
 from time import perf_counter
 from typing import TYPE_CHECKING
 
-import numpy as np
 import torch
 from torch.utils.data import Dataset
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
     from pathlib import Path
     from types import TracebackType
 
     from polars import DataFrame
-
-
-DEFAULT_RNG = np.random.default_rng()
+    from transformers import BatchEncoding, PreTrainedTokenizer
 
 
 class ClassificationDataset(Dataset):
@@ -76,16 +73,17 @@ class ClassificationCollator:
     """
 
     def __init__(
-        self, tok: Callable, noise: float = 0.0, *, base: bool = False
+        self,
+        tok: PreTrainedTokenizer,
+        noise: float = 0.0,
     ) -> None:
         """Initialize the collator with the tokenization function and noise level."""
         self.__tok = tok
         self.__noise = noise
-        self.__base = base
 
     def __call__(
         self, batch: list[tuple[str, ...]]
-    ) -> tuple[dict[str, torch.Tensor], torch.Tensor]:
+    ) -> tuple[BatchEncoding, torch.Tensor]:
         """Process a batch of text data and labels.
 
         The text data is tokenized and the labels are converted to a torch tensor.
@@ -103,14 +101,10 @@ class ClassificationCollator:
         texts = [
             perturb(text, self.__noise) if self.__noise else text for text, _ in batch
         ]
-        batch_tensors = (
-            self.__tok(texts, padding=True, truncation=True, return_tensors="pt")
-            if self.__base
-            else self.__tok(texts)
-        )
+        tensors = self.__tok(texts, padding=True, truncation=True, return_tensors="pt")
         labels = torch.tensor([label for _, label in batch]).long()
 
-        return batch_tensors, labels
+        return tensors, labels
 
 
 class Timer:
@@ -134,7 +128,7 @@ class Timer:
         self.interval: float = perf_counter() - self.start_time
 
 
-def perturb(text: str, noise: float, rng: np.random.Generator = DEFAULT_RNG) -> str:
+def perturb(text: str, noise: float) -> str:
     """Add noise to text by randomly concatenating words.
 
     This function takes a string `text` and a float `theta` as input
@@ -155,27 +149,24 @@ def perturb(text: str, noise: float, rng: np.random.Generator = DEFAULT_RNG) -> 
 
     Examples
     --------
-    >>> rng = np.random.default_rng(0)
-    >>> perturb('This is a perturbed text example with lowest probability', 0.0, rng)
+    >>> random.seed(0)
+    >>> perturb('This is a perturbed text example with lowest probability', 0.0)
     'This is a perturbed text example with lowest probability'
 
-    >>> rng = np.random.default_rng(0)
-    >>> perturb('This is a perturbedtext examplewith low probability', 0.2, rng)
-    'This is aperturbedtextexamplewith low probability'
+    >>> perturb('This is a perturbedtext examplewith low probability', 0.2)
+    'This is a perturbedtext examplewith low probability'
 
-    >>> rng = np.random.default_rng(0)
-    >>> perturb('This is a perturbed text example with high probability', 0.8, rng)
-    'Thisisaperturbedtext example withhighprobability'
+    >>> perturb('This is a perturbed text example with high probability', 0.8)
+    'Thisisa perturbed text example withhighprobability'
 
-    >>> rng = np.random.default_rng(0)
-    >>> perturb('This is a perturbed text example with highest probability', 1.0, rng)
+    >>> perturb('This is a perturbed text example with highest probability', 1.0)
     'Thisisaperturbedtextexamplewithhighestprobability'
     """
-    text_split = text.strip().split()
+    text_split = text.split()
     text_perturbed = [text_split[0]]
 
     for word in text_split[1:]:
-        if rng.uniform(low=0.0, high=1.0) <= noise:
+        if random.random() <= noise:  # noqa: S311
             text_perturbed[-1] += word
         else:
             text_perturbed.append(word)

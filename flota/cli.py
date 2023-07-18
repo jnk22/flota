@@ -117,9 +117,8 @@ def run(  # noqa: PLR0913, PLR0915
     train_noise = theta * (noise == NoiseType.TRAIN)
     test_noise = theta * (noise in {NoiseType.TRAIN, NoiseType.TEST})
 
-    base_mode = mode == TokenizeMode.BASE
-    train_collator = ClassificationCollator(tokenizer, train_noise, base=base_mode)
-    test_collator = ClassificationCollator(tokenizer, test_noise, base=base_mode)
+    train_collator = ClassificationCollator(tokenizer, train_noise)
+    test_collator = ClassificationCollator(tokenizer, test_noise)
 
     collators = {
         RunType.TRAIN: train_collator,

@@ -10,7 +10,7 @@ from itertools import chain
 from typing import TYPE_CHECKING, Final, NamedTuple
 
 import torch
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, BatchEncoding, PreTrainedTokenizer
 
 from .enums import FlotaMode
 from .exceptions import PretrainedTokenizerLoadError, UnsupportedModelError
@@ -32,7 +32,7 @@ class CacheInfo(NamedTuple):
     currsize: int
 
 
-class FlotaTokenizer(ABC):
+class FlotaTokenizer(ABC, PreTrainedTokenizer):
     """Abstract base class for FLOTA tokenization methods."""
 
     __SPECIAL: Final[str] = "-"
@@ -150,7 +150,9 @@ class FlotaTokenizer(ABC):
         combined = self._special_token + word
         return (combined, word) if start else (word, combined)
 
-    def __call__(self, texts: Iterable[str]) -> dict[str, torch.Tensor]:
+    def __call__(
+        self, texts: Iterable[str], **_kwargs: Any  # noqa: ANN401
+    ) -> BatchEncoding:
         """Tokenize and encode a list of texts and return them as torch tensors.
 
         Parameters
@@ -187,7 +189,7 @@ class FlotaTokenizer(ABC):
             input_ids[i, self._tensor_text_input_index(text)] = torch.tensor(text)
             attention_mask[i, self._tensor_text_input_index(text)] = 1
 
-        return {"input_ids": input_ids, "attention_mask": attention_mask}
+        return BatchEncoding({"input_ids": input_ids, "attention_mask": attention_mask})
 
     def encode(self, text: str) -> list[int]:
         """Encode the input text into a list of integers.
