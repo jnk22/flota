@@ -329,8 +329,6 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
                 return self._tokenize_first(word, **kwargs)
             case FlotaMode.LONGEST:
                 return self._tokenize_longest(word, **kwargs)
-            case _:
-                return NotImplemented
 
     def __build_flota_dict(
         self, word: str, recursive_k: int | None, *, start: bool
