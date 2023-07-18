@@ -7,7 +7,7 @@ import functools
 import re
 from abc import ABC, abstractmethod
 from itertools import chain
-from typing import TYPE_CHECKING, Final, NamedTuple
+from typing import TYPE_CHECKING, Final
 
 import torch
 from transformers import AutoTokenizer, BatchEncoding, PreTrainedTokenizer
@@ -22,14 +22,7 @@ if TYPE_CHECKING:
 
     from tokenizers import Tokenizer
 
-
-class CacheInfo(NamedTuple):
-    """Representation wrapper for `functools.lru_cache` info."""
-
-    hits: int
-    misses: int
-    maxsize: int | None
-    currsize: int
+    from .cache_info import CacheInfo
 
 
 class FlotaTokenizer(ABC, PreTrainedTokenizer):
