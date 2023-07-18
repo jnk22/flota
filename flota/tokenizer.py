@@ -334,14 +334,14 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
         self, word: str, recursive_k: int | None, *, start: bool
     ) -> dict[int, str]:
         # Return a dictionary of subword indices and subwords.
-        finished_word = len(word) * self.__SPECIAL
-        if (recursive_k is not None and recursive_k < 1) or finished_word == word:
+        recursive_limit = isinstance(recursive_k, int) and recursive_k < 1
+        if recursive_limit or all(char == self.__SPECIAL for char in word):
             return {}
 
         flota_dict, next_word = self.__max_subword_split(word, start=start)
 
         if next_word:
-            next_k = recursive_k - 1 if recursive_k is not None else None
+            next_k = (recursive_k - 1) if isinstance(recursive_k, int) else None
             return flota_dict | self.__build_flota_dict(next_word, next_k, start=start)
 
         return flota_dict
@@ -374,15 +374,15 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
             return DPContainer({DPItem(token, word, index, first_match=first_match)})
 
         # Generate all possible subword pairs with their respective scores.
-        token_candidates = []
-        split_words = ((word[:i], word[i:], i) for i in range(1, len(word)))
-        for sw_left, sw_right, i in split_words:
-            dp_left = self.__build_dynamic(sw_left, index, start=True and start)
-            dp_right = self.__build_dynamic(sw_right, index + i, start=False)
-            token_candidates.append(DPContainer.from_containers(dp_left, dp_right))
+        token_candidates = (
+            DPContainer.from_containers(
+                self.__build_dynamic(word[:i], index, start=start),
+                self.__build_dynamic(word[i:], index + i, start=False),
+            )
+            for i in range(1, len(word))
+        )
 
-        # Reverse to keep longer parts of the beginning of the word.
-        return max(reversed(token_candidates), default=DPContainer())
+        return max(token_candidates, default=DPContainer())
 
     def __word_in_vocab(
         self, word: str, *, start: bool = True, default_vocab: bool = False
