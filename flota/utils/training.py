@@ -9,7 +9,7 @@ from sklearn.metrics import f1_score
 from torch import optim
 from tqdm import tqdm
 
-from .data import Timer
+from flota.utils import Timer
 
 if TYPE_CHECKING:
     from torch.utils.data import DataLoader

@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import random
+from functools import cached_property
 from time import perf_counter
 from typing import TYPE_CHECKING
 
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import DataLoader, Dataset
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
     from pathlib import Path
     from types import TracebackType
 
@@ -20,13 +22,13 @@ if TYPE_CHECKING:
 class ClassificationDataset(Dataset):
     """A dataset class for classification tasks.
 
-    The dataset is created from a pandas DataFrame, with the texts and
-    labels being stored in the class instance.
+    The dataset is created from a mapping, with the texts and labels
+    being stored in the class instance.
 
     Parameters
     ----------
     data
-        A pandas DataFrame containing the text and label columns.
+        A mapping containing the text and label columns.
 
     Attributes
     ----------
@@ -38,24 +40,76 @@ class ClassificationDataset(Dataset):
         A list of label data.
     """
 
-    def __init__(self, data: DataFrame) -> None:
-        """Initialize the dataset with the data."""
-        self.n_classes = len(set(data["label"]))
-        self.texts = list(data["text"])
-        self.labels = list(data["label"])
+    def __init__(
+        self, data: Mapping[str, Iterable[str] | Iterable[int]] | DataFrame
+    ) -> None:
+        """Initialize the dataset with data.
+
+        Parameters
+        ----------
+        data
+            Text and labels, can be a `DataFrame` or a `Mapping` such as
+            a dictionary with `text` and `label` entries.
+
+        Raises
+        ------
+        ValueError
+            If texts or labels are empty or have different sizes.
+        """
+        texts = list(data["text"])
+        labels = list(data["label"])
+        text_len = len(texts)
+        label_len = len(labels)
+
+        if 0 in {text_len, label_len}:
+            msg = "Text and labels cannot be empty."
+            raise ValueError(msg)
+
+        if text_len != label_len:
+            msg = f"Text and labels must be of same length: {text_len} != {label_len}"
+            raise ValueError(msg)
+
+        self.texts = texts
+        self.labels = labels
+
+    @cached_property
+    def n_classes(self) -> int:
+        """Return amount of classes in datset.
+
+        Returns
+        -------
+        int
+            Amount of classes in dataset.
+        """
+        return len(set(self.labels))
 
     def __len__(self) -> int:
-        """Return the length of the dataset."""
-        return len(self.labels)
+        """Return the length of the dataset.
+
+        Returns
+        -------
+        int
+            Amount of texts/labels in dataset.
+        """
+        return len(self.texts)
 
     def __getitem__(self, index: int) -> tuple[list[str], list[str]]:
-        """Return the item at the given index in the dataset."""
-        text = self.texts[index]
-        label = self.labels[index]
-        return text, label
+        """Return the item at the given index in the dataset.
+
+        Parameters
+        ----------
+        index
+            Index of dataset.
+
+        Returns
+        -------
+        tuple[list[str], list[str]]
+            Text sentence and respective label for given index.
+        """
+        return self.texts[index], self.labels[index]
 
 
-class ClassificationCollator:
+class ClassificationCollator(DataLoader):
     """A collator class for classification tasks.
 
     The collator class takes a tokenization function, a noise level, and

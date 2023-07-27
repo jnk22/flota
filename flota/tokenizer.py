@@ -12,9 +12,9 @@ from typing import TYPE_CHECKING, Final
 import torch
 from transformers import AutoTokenizer, BatchEncoding, PreTrainedTokenizer
 
-from .enums import FlotaMode
-from .exceptions import PretrainedTokenizerLoadError, UnsupportedModelError
-from .flota_dp import DPContainer, DPItem
+from flota.enums import FlotaMode
+from flota.exceptions import PretrainedTokenizerLoadError, UnsupportedModelError
+from flota.flota_dp import DPContainer, DPItem
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
     from tokenizers import Tokenizer
 
-    from .cache_info import CacheInfo
+    from flota.cache_info import CacheInfo
 
 
 class FlotaTokenizer(ABC, PreTrainedTokenizer):

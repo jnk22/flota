@@ -5,7 +5,7 @@ from typing import Optional
 
 from typer import Argument, Option, Typer
 
-from .enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
+from flota.enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
 
 IntOrNone = Optional[int]
 PathOrNone = Optional[Path]
@@ -17,7 +17,7 @@ def version_callback(*, value: bool) -> None:
     from typer import Exit
 
     if value:
-        from .cli import print_version
+        from flota.cli import print_version
 
         print_version()
         raise Exit
@@ -86,7 +86,7 @@ def run(  # noqa: PLR0913
     strict: bool = CLI_STRICT,
 ) -> None:
     """Run FLOTA tokenization."""
-    from .cli import run
+    from flota.cli import run
 
     run(
         model_name,
@@ -125,7 +125,7 @@ def encode(  # noqa: PLR0913
 
     Output will be separated into a single line for each word.
     """
-    from .cli import encode
+    from flota.cli import encode
 
     encode(
         model_name,
@@ -155,7 +155,7 @@ def tokenize(  # noqa: PLR0913
 
     Output will be separated into a single line for each word.
     """
-    from .cli import tokenize
+    from flota.cli import tokenize
 
     tokenize(
         model_name,
@@ -172,7 +172,7 @@ def tokenize(  # noqa: PLR0913
 @cli.command()
 def server(host: str = CLI_HOST, port: int = CLI_PORT) -> None:
     """Run FLOTA API backend server."""
-    from .server import run
+    from flota.server import run
 
     run(host, port)
 

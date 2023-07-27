@@ -4,7 +4,8 @@ import itertools
 
 import pytest
 
-from flota import AutoFlotaTokenizer, CacheInfo, FlotaMode
+from flota import AutoFlotaTokenizer, FlotaMode
+from flota.cache_info import CacheInfo
 from flota.exceptions import PretrainedTokenizerLoadError, UnsupportedModelError
 
 

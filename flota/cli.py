@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from .enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
+from flota.enums import FlotaMode, NoiseType, ResultFileExistsMode, TokenizeMode
 
 
 def run(  # noqa: PLR0913, PLR0915
@@ -36,9 +36,9 @@ def run(  # noqa: PLR0913, PLR0915
     from torch.utils.data import DataLoader
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-    from .enums import RunType
-    from .tokenizer import AutoFlotaTokenizer
-    from .utils import (
+    from flota.enums import RunType
+    from flota.tokenizer import AutoFlotaTokenizer
+    from flota.utils import (
         ClassificationCollator,
         ClassificationDataset,
         Timer,
@@ -194,8 +194,8 @@ def encode(  # noqa: PLR0913
 
     Output will be separated into a single line for each word.
     """
-    from .tokenizer import AutoFlotaTokenizer
-    from .utils import read_vocab
+    from flota.tokenizer import AutoFlotaTokenizer
+    from flota.utils import read_vocab
 
     tokenizer = AutoFlotaTokenizer.from_pretrained(
         model_name,
@@ -226,8 +226,8 @@ def tokenize(  # noqa: PLR0913
 
     Output will be separated into a single line for each word.
     """
-    from .tokenizer import AutoFlotaTokenizer
-    from .utils import read_vocab
+    from flota.tokenizer import AutoFlotaTokenizer
+    from flota.utils import read_vocab
 
     tokenizer = AutoFlotaTokenizer.from_pretrained(
         model_name,
