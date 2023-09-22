@@ -1,10 +1,12 @@
 # FLOTA
 
 [![Lint & Test](https://github.com/jnk22/flota/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/flota/actions/workflows/ci.yml)
+[![Python version](https://img.shields.io/badge/python-3.10-blue)](./pyproject.toml)
 [![codecov](https://codecov.io/github/jnk22/flota/branch/main/graph/badge.svg?token=Q5F44R4TTQ)](https://codecov.io/github/jnk22/flota)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b39bcc206b0667d336c3/maintainability)](https://codeclimate.com/github/jnk22/flota/maintainability)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d5ecd4974eca494f82201976f424c2ba)](https://www.codacy.com/gh/jnk22/flota/dashboard?utm_source=github.com&utm_medium=referral&utm_content=jnk22/flota&utm_campaign=Badge_Grade)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/jnk22/flota/main.svg)](https://results.pre-commit.ci/latest/github/jnk22/flota/main)
+[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -27,8 +29,6 @@ Additionally, this repository contains:
 ## Dependencies
 
 All dependencies are defined in [pyproject.toml](pyproject.toml).
-
-Python 3.10+ is required.
 
 ## Installation
 

@@ -9,6 +9,13 @@ maintainers = [
 ]
 license = "MIT"
 readme = "README.md"
+classifiers = [
+  'Development Status :: 2 - Pre-Alpha',
+  'Intended Audience :: Developers',
+  'Natural Language :: English',
+  'Programming Language :: Python :: 3',
+  'Programming Language :: Python :: 3.10',
+]
 packages = [{ include = "flota" }]
 
 [tool.poetry.dependencies]
