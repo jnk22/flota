@@ -11,7 +11,13 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -22,7 +28,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           cache: poetry
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       - name: Install dependencies
         run: poetry install --with test
@@ -32,16 +39,19 @@ jobs:
 
       - name: Codecov
         uses: codecov/codecov-action@v3
+        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Codacy Coverage Reporter
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
+        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: coverage.xml
 
       - name: Code Climate Coverage Action
         uses: paambaati/codeclimate-action@v5.0.0
+        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}

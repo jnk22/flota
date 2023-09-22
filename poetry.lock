@@ -1319,6 +1319,7 @@ files = [
 
 [package.dependencies]
 anyio = ">=3.4.0,<5"
+typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyaml"]
@@ -1642,5 +1643,5 @@ cli-lts = ["numpy", "polars-lts-cpu", "scikit-learn", "tqdm", "typer"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.10,<3.11"
-content-hash = "953b6baa9581312d3efc9e2f0f6ade9696b203e41800f865908e9af212a3fce6"
+python-versions = ">=3.9,<3.12"
+content-hash = "d9fa09e3678a86efdcf8fe546605963aa152cabecb13f30807b027fc08339069"
