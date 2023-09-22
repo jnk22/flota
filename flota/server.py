@@ -8,7 +8,6 @@ demo purposes.
 """
 
 import fastapi
-import uvicorn
 from fastapi import Depends, Query
 from pydantic import BaseModel, Field
 
@@ -76,4 +75,6 @@ async def encode(
 
 def run(host: str, port: int) -> None:
     """Run FLOTA API backend server."""
+    import uvicorn
+
     uvicorn.run(app, host=host, port=port)

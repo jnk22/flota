@@ -46,6 +46,8 @@ pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
 typer = "*"
+fastapi = "*"
+scikit-learn = "*"
 
 [tool.poetry.group.dev]
 optional = true
