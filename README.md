@@ -35,7 +35,7 @@ All dependencies are defined in [pyproject.toml](pyproject.toml).
 Using **pipx**:
 
 ```bash
-pipx install "git+https://github.com/jnk22/flota.git#egg=flota[backend]"
+pipx install "git+https://github.com/jnk22/flota.git#egg=flota[api,cli]"
 ```
 
 Using **poetry**:
@@ -43,49 +43,72 @@ Using **poetry**:
 ```bash
 git clone https://github.com/jnk22/flota
 cd flota
-poetry install --extras backend
+poetry install --extras "api cli"
 ```
 
-_The extra package **backend** installs the HTTP API backend.
-This can be omitted if not required._
+_The extra packages **api** and **cli** are only required for the CLI
+application and HTTP server. These can be omitted if only used as
+library._
 
 ## Usage
 
-### Run model tests
+### Python library
+
+```python
+from flota import AutoFlotaTokenizer, FlotaMode
+
+# Original mode: FLOTA, k=3
+flota = AutoFlotaTokenizer.from_pretrained("bert-base-uncased", FlotaMode.FLOTA, k=3)
+print(flota.tokenize("visualization"))  # ['vis', '#ua', '##lization']
+
+# Additional mode: FLOTA-DP
+flota = AutoFlotaTokenizer.from_pretrained("bert-base-uncased", FlotaMode.FLOTA_DP)
+print(flota.tokenize("visualization"))  # ['visual', '##ization']
+```
+
+### CLI application
+
+_This requires the installation of extra packages **CLI**!_
+
+#### Run performance tests
 
 ```bash
 flota run bert-base-uncased data/arxiv_cs_1e+02
 ```
 
-### Tokenize text
+#### Tokenize words
 
 ```bash
 flota tokenize bert-base-uncased this is an example text to be tokenized
 ```
 
-### Encode text
+#### Encode words
 
 ```bash
 flota encode bert-base-uncased this is an example text to be encoded
 ```
 
-### Run HTTP server
+### HTTP server
 
 The FLOTA server is a demo backend that serves an HTTP API for demo purposes.
 
 ```bash
 flota server --host 127.0.0.1 --port 8000
+
+# In another terminal:
+curl -X 'GET' 'http://127.0.0.1:8000/tokenize?word=visualization&model=bert-base-uncased&mode=flota'
 ```
 
 Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) or
-[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc).
+[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) for OpenAPI
+visualizations.
 
 ## Data
 
 - **arXiv Dataset** _(English)_
 - **[Ten Thousand German News Articles Dataset](https://tblock.github.io/10kGNAD/)** _(German)_
 
-All datasets can be found in `data`.
+All datasets are available in [`data`](./data/).
 
 ## Citation
 
