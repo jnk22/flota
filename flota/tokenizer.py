@@ -463,9 +463,9 @@ class AutoFlotaTokenizer:
     """Class for creating model specific `FlotaTokenizer`."""
 
     __MAPPING: Final[dict[str, type[FlotaTokenizer]]] = {
-        "bert": BertFlotaTokenizer,
-        "xlnet": XLNetFlotaTokenizer,
-        "gpt2": GPT2FlotaTokenizer,
+        "bert": BertFlotaTokenizer,  # type: ignore[type-abstract]
+        "xlnet": XLNetFlotaTokenizer,  # type: ignore[type-abstract]
+        "gpt2": GPT2FlotaTokenizer,  # type: ignore[type-abstract]
     }
 
     @classmethod

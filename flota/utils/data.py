@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
     from polars import DataFrame
     from transformers import BatchEncoding, PreTrainedTokenizer
+    from typing_extensions import Self
 
 
 class ClassificationDataset(Dataset):
@@ -167,7 +168,7 @@ class Timer:
     Source: https://stackoverflow.com/a/69156219.
     """
 
-    def __enter__(self) -> Timer:
+    def __enter__(self) -> Self:
         """Entry point."""
         self.start_time: float = perf_counter()
         return self
