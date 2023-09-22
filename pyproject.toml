@@ -15,11 +15,12 @@ classifiers = [
   'Natural Language :: English',
   'Programming Language :: Python :: 3',
   'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11',
 ]
 packages = [{ include = "flota" }]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = ">=3.10,<3.12"
 
 torch = "^1.13.0"
 transformers = "^4.33.0"
