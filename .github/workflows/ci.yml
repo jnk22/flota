@@ -3,24 +3,14 @@ name: CI
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run black
-        uses: psf/black@stable
-        with:
-          jupyter: true
-          version: "~= 22.0"
-
   test:
-    needs: format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -52,6 +42,6 @@ jobs:
           coverage-reports: coverage.xml
 
       - name: Code Climate Coverage Action
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
