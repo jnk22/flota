@@ -1643,4 +1643,4 @@ cli-lts = ["numpy", "polars-lts-cpu", "scikit-learn", "tqdm", "typer"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "5f8dcad2ecdcd6f1feadd229995fdd4c35d866fac3694e467ee823c85b3d7e10"
+content-hash = "953b6baa9581312d3efc9e2f0f6ade9696b203e41800f865908e9af212a3fce6"
