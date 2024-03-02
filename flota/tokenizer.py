@@ -144,7 +144,9 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
         return (combined, word) if start else (word, combined)
 
     def __call__(
-        self, texts: Iterable[str], **_kwargs: Any  # noqa: ANN401
+        self,
+        texts: Iterable[str],
+        **_kwargs: Any,  # noqa: ANN401
     ) -> BatchEncoding:
         """Tokenize and encode a list of texts and return them as torch tensors.
 
@@ -161,16 +163,18 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
 
         Examples
         --------
-        >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=5)
-        >>> texts = ['Sample text', 'to be tokenized']
+        >>> tokenizer = AutoFlotaTokenizer.from_pretrained(
+        ...     "distilbert-base-cased", FlotaMode.FLOTA, k=5
+        ... )
+        >>> texts = ["Sample text", "to be tokenized"]
         >>> tokenized = tokenizer(texts)
-        >>> tokenized['input_ids']
+        >>> tokenized["input_ids"]
         tensor([[  101,   156, 26671,  3087,   102,     0],
                 [  101,  1106,  1129, 22559,  2200,   102]])
-        >>> tokenized['attention_mask']
+        >>> tokenized["attention_mask"]
         tensor([[1, 1, 1, 1, 1, 0],
                 [1, 1, 1, 1, 1, 1]])
-        """  # noqa: E501
+        """
         encoded_texts = [self.encode(text) for text in texts]
         batch_size = len(encoded_texts)
         max_len = max(len(text) for text in encoded_texts)
@@ -205,15 +209,17 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
 
         Examples
         --------
-        >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=3)
-        >>> text = 'This is a sample text to be tokenized and encoded'
+        >>> tokenizer = AutoFlotaTokenizer.from_pretrained(
+        ...     "distilbert-base-cased", FlotaMode.FLOTA, k=3
+        ... )
+        >>> text = "This is a sample text to be tokenized and encoded"
         >>> tokenizer.encode(text)
         [101, 1188, 1110, 170, 6876, 3087, 1106, 1129, 22559, 2200, 1105, 12544, 102]
 
-        >>> text = 'This is another example'
+        >>> text = "This is another example"
         >>> tokenizer.encode(text)
         [101, 1188, 1110, 1330, 1859, 102]
-        """  # noqa: E501
+        """
         words = re.findall(r"[\w]+|[^\s\w]", text)
         tokens = (token for word in words for token in self.tokenize(word))
         token_ids = self._tok.convert_tokens_to_ids(tokens)[: self.__encoded_max_length]
@@ -242,16 +248,18 @@ class FlotaTokenizer(ABC, PreTrainedTokenizer):
 
         Examples
         --------
-        >>> tokenizer = AutoFlotaTokenizer.from_pretrained('distilbert-base-cased', FlotaMode.FLOTA, k=2)
-        >>> tokenizer.tokenize('example')
+        >>> tokenizer = AutoFlotaTokenizer.from_pretrained(
+        ...     "distilbert-base-cased", FlotaMode.FLOTA, k=2
+        ... )
+        >>> tokenizer.tokenize("example")
         ['example']
 
-        >>> tokenizer.tokenize('tokenization')
+        >>> tokenizer.tokenize("tokenization")
         ['token', '##ization']
 
-        >>> tokenizer.tokenize('mutagenic')
+        >>> tokenizer.tokenize("mutagenic")
         ['##uta', '##genic']
-        """  # noqa: E501
+        """
         token, _ = self.__word_in_vocab(word, default_vocab=True)
         if token:
             return [token]
@@ -528,5 +536,8 @@ class AutoFlotaTokenizer:
 
         else:
             return flota_tokenizer_class(
-                pretrained_tokenizer, mode, k=k, **kwargs  # type: ignore[arg-type]
+                pretrained_tokenizer,
+                mode,
+                k=k,
+                **kwargs,  # type: ignore[arg-type]
             )

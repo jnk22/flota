@@ -205,16 +205,16 @@ def perturb(text: str, noise: float) -> str:
     Examples
     --------
     >>> random.seed(0)
-    >>> perturb('This is a perturbed text example with lowest probability', 0.0)
+    >>> perturb("This is a perturbed text example with lowest probability", 0.0)
     'This is a perturbed text example with lowest probability'
 
-    >>> perturb('This is a perturbedtext examplewith low probability', 0.2)
+    >>> perturb("This is a perturbedtext examplewith low probability", 0.2)
     'This is a perturbedtext examplewith low probability'
 
-    >>> perturb('This is a perturbed text example with high probability', 0.8)
+    >>> perturb("This is a perturbed text example with high probability", 0.8)
     'Thisisa perturbed text example withhighprobability'
 
-    >>> perturb('This is a perturbed text example with highest probability', 1.0)
+    >>> perturb("This is a perturbed text example with highest probability", 1.0)
     'Thisisaperturbedtextexamplewithhighestprobability'
     """
     text_split = text.split()
