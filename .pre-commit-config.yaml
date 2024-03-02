@@ -1,4 +1,8 @@
 ---
+ci:
+  # Tempororarily disable pyroma due to dependency/installation failures.
+  skip: ["pyroma"]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -53,15 +57,15 @@ repos:
     hooks:
       - id: beautysh
         args: ["-i", "2"]
-  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-    rev: v9.13.0
-    hooks:
-      - id: commitlint
-        stages: [commit-msg]
-        additional_dependencies: ["@commitlint/config-conventional"]
   - repo: https://github.com/regebro/pyroma
     rev: "4.2"
     hooks:
       - id: pyroma
         # We set the minimum score to 8 due to missing an author email.
         args: ["-n", "8", "."]
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.13.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ["@commitlint/config-conventional"]
