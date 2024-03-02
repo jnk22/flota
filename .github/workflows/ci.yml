@@ -13,19 +13,19 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ["3.10", "3.11"]
-        os: [ubuntu-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Poetry
         run: pipx install poetry
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           cache: poetry
           python-version: ${{ matrix.python-version }}
@@ -38,20 +38,20 @@ jobs:
         run: poetry run pytest --cov --cov-report=xml -n 8
 
       - name: Codecov
-        uses: codecov/codecov-action@v3
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Codacy Coverage Reporter
-        uses: codacy/codacy-coverage-reporter-action@v1.3.0
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
+        uses: codacy/codacy-coverage-reporter-action@v1
+        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: coverage.xml
 
       - name: Code Climate Coverage Action
-        uses: paambaati/codeclimate-action@v5.0.0
-        if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
+        uses: paambaati/codeclimate-action@v5
+        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}

@@ -1,7 +1,7 @@
 # FLOTA
 
 [![Lint & Test](https://github.com/jnk22/flota/actions/workflows/ci.yml/badge.svg)](https://github.com/jnk22/flota/actions/workflows/ci.yml)
-[![Python version](https://img.shields.io/badge/python-3.10%20|%203.11-blue)](./pyproject.toml)
+[![Python version](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12-blue)](./pyproject.toml)
 [![codecov](https://codecov.io/github/jnk22/flota/branch/main/graph/badge.svg?token=Q5F44R4TTQ)](https://codecov.io/github/jnk22/flota)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b39bcc206b0667d336c3/maintainability)](https://codeclimate.com/github/jnk22/flota/maintainability)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d5ecd4974eca494f82201976f424c2ba)](https://www.codacy.com/gh/jnk22/flota/dashboard?utm_source=github.com&utm_medium=referral&utm_content=jnk22/flota&utm_campaign=Badge_Grade)
@@ -24,13 +24,6 @@ Additionally, this repository contains:
 - Additional passing of **prefixes** and **suffixes** to tokenizer
 - Simple HTTP API for tokenizing/encoding words
 - Improved CLI
-
-## Dependencies
-
-At least Python 3.10 is required due to usage of [pattern matching](https://peps.python.org/pep-0634/).
-_Using Python 3.11 might fail on some platforms due to [pending support from PyTorch](https://github.com/pytorch/pytorch/issues/86566)._
-
-All further dependencies are defined in [`pyproject.toml`](./pyproject.toml).
 
 ## Installation
 
