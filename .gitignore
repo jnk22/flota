@@ -32,3 +32,6 @@ poetry.toml
 results
 justfile
 .envrc
+
+# pre-commit cache
+node_modules/
